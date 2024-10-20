@@ -35,7 +35,7 @@ class Student with ChangeNotifier {
 
     try {
       response = await http.post(
-          Uri.parse("http://10.0.2.2/TuitionGiggle/for_app/login_students.php"),
+          Uri.parse("http://10.0.2.2/TuitionGiggle/appData/login_students.php"),
           body: {
             "username": username.trim(),
             "password": password.trim(),

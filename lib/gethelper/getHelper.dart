@@ -12,7 +12,7 @@ class GetHelper{
       String dataID, String typeOfData, String inputData) async {
     try {
       final response = await http.post(
-          Uri.parse("http://10.0.2.2/TuitionGiggle/for_app/get_data/$typeOfData.php"),
+          Uri.parse("http://10.0.2.2/TuitionGiggle/appData/retrieve_data/$typeOfData.php"),
         body: {
           "$inputData": dataID,
         }
@@ -59,7 +59,7 @@ class GetHelper{
         };
 
         var response = await http.post(
-          Uri.parse("http://10.0.2.2/TuitionGiggle/for_app/insert_data/insert_complaints.php"),
+          Uri.parse("http://10.0.2.2/TuitionGiggle/appData/add_data/insert_complaints.php"),
           body: json.encode(data),
         );
 
@@ -141,7 +141,7 @@ class GetHelper{
         };
 
         var response = await http.post(
-          Uri.parse("http://10.0.2.2/TuitionGiggle/for_app/insert_data/insert_tasks.php"),
+          Uri.parse("http://10.0.2.2/TuitionGiggle/appData/add_data/insert_tasks.php"),
           headers: {"Content-Type": "application/json"},
           body: json.encode(data),
         );

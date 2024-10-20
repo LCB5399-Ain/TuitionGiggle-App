@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "767709044697",
+    "project_id": "tuitiongiggle",
+    "storage_bucket": "tuitiongiggle.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:767709044697:android:d1d22ecad8d3f3f4d203c8",
+        "android_client_info": {
+          "package_name": "com.example.tuitiongiggle"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFBHgSl6nP4hRpgU1nvqcw4BQGVuGmcYY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

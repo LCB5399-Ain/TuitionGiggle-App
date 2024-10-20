@@ -36,7 +36,7 @@ class Teacher with ChangeNotifier {
     var datauser;
     try{
       response = await http.post(
-          Uri.parse("http://10.0.2.2/TuitionGiggle/for_app/login_teachers.php"),
+          Uri.parse("http://10.0.2.2/TuitionGiggle/appData/login_teachers.php"),
           body: {
             "username": username.trim(),
             "password": password.trim(),
