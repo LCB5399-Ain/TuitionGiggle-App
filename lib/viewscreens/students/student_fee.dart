@@ -14,13 +14,16 @@ class StudentFee extends StatefulWidget{
   _StudentFeeState createState() => _StudentFeeState();
 }
 
+// Handles the receipt data fetching and UI updates
 class _StudentFeeState extends State<StudentFee>{
   var fee;
-  double total = 0;
+  double total = 0; // total amount
 
   @override
   void initState() {
+    // Use the getHelper to get the fee receipt data
     fee = GetHelper.getData(widget.studentID, 'get_student_feePayment', 'studentID');
+    // Reset total to 0
     total = 0;
     super.initState();
   }
@@ -33,7 +36,7 @@ class _StudentFeeState extends State<StudentFee>{
         decoration: BoxDecoration(
           color: Color.fromRGBO(116, 164, 199, 1),
         ),
-
+        // Code adapted from Yassein, 2020
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -48,6 +51,7 @@ class _StudentFeeState extends State<StudentFee>{
                     Row(
                       children: [
                         IconButton(
+                          // Back arrow button
                           icon: Icon(Icons.arrow_back,
                               color: Colors.white,
                               size: 30
@@ -56,9 +60,9 @@ class _StudentFeeState extends State<StudentFee>{
                             Navigator.pop(context);
                           },
                         ),
-                        SizedBox(width: 50),
+                        SizedBox(width: 80),
                         Text(
-                          "Fee Payment",
+                          "Receipt",
                           style: GoogleFonts.antic(
                             textStyle: TextStyle(
                               color: Colors.white,
@@ -78,10 +82,12 @@ class _StudentFeeState extends State<StudentFee>{
                   width: double.infinity,
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(100))
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(90),
+                          topRight: Radius.circular(90))
                   ),
                   padding: EdgeInsets.all(20),
 
+                  // Use list view to show data
                   child: FutureBuilder(future: fee, builder: (context, snapshots) {
                     // Loads the data
                     if (snapshots.connectionState == ConnectionState.waiting) {
@@ -89,7 +95,7 @@ class _StudentFeeState extends State<StudentFee>{
                         child: CircularProgressIndicator(),
                       );
                     }
-                    // Display the message if there is no data
+                    // Handles the null values there is no receipt data or is empty
                     if (!snapshots.hasData || snapshots.data == null || (snapshots.data as List).isEmpty) {
                       return Center(
                           child: Text('There is no fee payment that has been added currently',
@@ -100,7 +106,7 @@ class _StudentFeeState extends State<StudentFee>{
                       );
                     }
 
-                    // Use snapshots.data as list
+                    // Extract the class list from the data
                     // Adds the amount for fees
                     total = 0;
                     var feeList = snapshots.data as List;
@@ -113,9 +119,10 @@ class _StudentFeeState extends State<StudentFee>{
 
 
                     return ListView.builder(
+                      // Items in the list
                       itemCount: (snapshots.data as List).length,
                       itemBuilder: (context, index) {
-
+                        // Use widget to display each receipt
                       return FeeWidget(
                         amount: feeList[index]['amount'],
                         dateOfPayment: feeList[index]['date_of_payment'],
@@ -126,6 +133,7 @@ class _StudentFeeState extends State<StudentFee>{
                   )
               ),
             ),
+                  // Bottom bar to show total
                   BottomAppBar(
                       shape: CircularNotchedRectangle(),
                       color: Colors.white,
@@ -222,6 +230,7 @@ class _StudentFeeState extends State<StudentFee>{
                       )
     ),
                   ),
+            // End of adapted code
           ],
         ),
       ),

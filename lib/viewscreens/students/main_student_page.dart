@@ -1,7 +1,10 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:tuitiongiggle/main.dart';
 import 'package:tuitiongiggle/provider/student.dart';
 import 'package:tuitiongiggle/viewscreens/students/student_announcement.dart';
 import 'package:tuitiongiggle/viewscreens/students/student_class.dart';
@@ -15,7 +18,7 @@ import 'package:tuitiongiggle/widget-components/cardItem.dart';
 import '../../animation/FadeAnimation.dart';
 import '../login.dart';
 
-
+// This is the home main page for students
 class MainStudentPage extends StatefulWidget {
   static const routeName = '/main-student-page';
 
@@ -27,7 +30,6 @@ class MainStudentPage extends StatefulWidget {
 class _MainStudentPageState extends State<MainStudentPage> {
 
   late StudentInfo getStudentInfo;
-
   late String studentID;
   late String studentFullName;
   late String studentYear;
@@ -38,7 +40,7 @@ class _MainStudentPageState extends State<MainStudentPage> {
   @override
   void initState() {
     super.initState();
-
+    // Get the student data from the provider
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var state = Provider.of<Student>(context, listen: false).getStudentInfo();
       if (state != null) {
@@ -46,21 +48,25 @@ class _MainStudentPageState extends State<MainStudentPage> {
           getStudentInfo = state;
         });
       } else {
+        // Print error if it fails
         print('An error has occurred');
       }
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
 
-    // Retrieve student's data
+    // Retrieve the student data using Provider
     getStudentInfo = Provider.of<Student>(context).getStudentInfo();
     studentID = getStudentInfo.studentID;
     studentFullName = getStudentInfo.fullName;
     studentYear = getStudentInfo.year;
     tuitionID = getStudentInfo.tuitionID;
 
+
+    // Code adapted from Yassein, 2020
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -81,7 +87,7 @@ class _MainStudentPageState extends State<MainStudentPage> {
                     SizedBox(
                       height: 50,
                     ),
-
+                    // Place student information header in the center
                     Center(
                         child: FadeAnimation(
                             1.3,
@@ -119,15 +125,15 @@ class _MainStudentPageState extends State<MainStudentPage> {
               SizedBox(
                 height: 20,
               ),
-
+              // Display all the card items
               Expanded(
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(60),
-                          topRight: Radius.circular(60)
+                          topLeft: Radius.circular(70),
+                          topRight: Radius.circular(70)
                       )
                   ),
                   padding: EdgeInsets.all(20),
@@ -142,6 +148,7 @@ class _MainStudentPageState extends State<MainStudentPage> {
                           img: 'assets/student_icon.png',
                           color: Color.fromRGBO(116, 164, 199, 1),
                           function: () {
+                            // Navigate user to the Student detail page
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -267,7 +274,7 @@ class _MainStudentPageState extends State<MainStudentPage> {
                             );
                           },
                         ),
-
+                        // Logout and direct users to login page
                         CardItem(
                             desc: 'Logout',
                             img: 'assets/logout.png',
@@ -292,6 +299,7 @@ class _MainStudentPageState extends State<MainStudentPage> {
         ),
       ),
     );
+    // End of adapted code
   }
 
 }

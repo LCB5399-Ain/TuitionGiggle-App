@@ -12,12 +12,14 @@ class StudentTimetable extends StatefulWidget {
   @override
   _StudentTimetableState createState() => _StudentTimetableState();
 }
-
-class _StudentTimetableState extends State<StudentTimetable>{
+// Handles the timetable data fetching and UI updates
+class _StudentTimetableState extends State<StudentTimetable> {
+  // Variable to hold other timetable data.
   var timetable;
 
   @override
   void initState() {
+    // Use the getHelper to get the feedback data
     timetable = GetHelper.getData(widget.studentID, 'get_student_timetable', 'studentID');
     super.initState();
   }
@@ -30,7 +32,7 @@ class _StudentTimetableState extends State<StudentTimetable>{
         decoration: BoxDecoration(
           color: Color.fromRGBO(116, 164, 199, 1),
         ),
-
+        // Code adapted from Yassein, 2020
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -47,6 +49,7 @@ class _StudentTimetableState extends State<StudentTimetable>{
                     Row(
                       children: [
                         IconButton(
+                          // Back arrow button
                           icon: Icon(Icons.arrow_back,
                               color: Colors.white,
                               size: 30
@@ -72,13 +75,15 @@ class _StudentTimetableState extends State<StudentTimetable>{
                 ],
               ),
             ),
+            // List of classes
             Expanded(
               child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(100))
+                          topLeft: Radius.circular(90),
+                          topRight: Radius.circular(90))
                   ),
                   padding: EdgeInsets.all(20),
 
@@ -92,7 +97,7 @@ class _StudentTimetableState extends State<StudentTimetable>{
                         );
                       }
 
-                      // Display the message if there is no data
+                      // Handles the null values there is no timetable data or is empty
                       if (!snapshots.hasData || snapshots.data == null || (snapshots.data as List).isEmpty) {
                         return Center(
                             child: Text('You have no timetable currently',
@@ -103,13 +108,14 @@ class _StudentTimetableState extends State<StudentTimetable>{
                             )
                         );
                       }
-                      // Use snapshots.data as list
+                      // Extract the class list from the data
                       var timetableList = snapshots.data as List;
 
                       return ListView.builder(
+                        // Items in the list
                         itemCount: (snapshots.data as List).length,
                         itemBuilder: (context, index) {
-
+                          // Use widget to display each timetable
                           return TimetableWidget(
                             classroom: timetableList[index]['classroom'] ?? 'No Classroom',
                             subject: timetableList[index]['subject'] ?? 'No Subject',
@@ -122,6 +128,7 @@ class _StudentTimetableState extends State<StudentTimetable>{
                   )),
             ),
           ],
+          // End of adapted code
         ),
       ),
     );

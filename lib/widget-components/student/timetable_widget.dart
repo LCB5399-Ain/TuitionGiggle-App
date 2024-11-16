@@ -66,7 +66,7 @@ class TimetableWidget extends StatelessWidget {
                 SizedBox(height: 4),
               ],
             ),
-
+            // Code adapted from Yassein, 2020
             onTap:() {
               showDialog(
                 context: context,
@@ -80,6 +80,7 @@ class TimetableWidget extends StatelessWidget {
                         child: Column(children: <Widget>[
                           Divider(thickness: 1.5,),
                           SizedBox(height: 10,),
+                          // End of adapted code
 
                           Row(
                             children: [

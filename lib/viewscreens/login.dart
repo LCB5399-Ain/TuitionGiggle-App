@@ -13,20 +13,25 @@ class Login extends StatefulWidget{
   _LoginState createState() => _LoginState();
 }
 
+// State class for login
+// Code adapted from Arora, 2024
 class _LoginState extends State<Login> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController username = new TextEditingController();
   TextEditingController password = new TextEditingController();
+  // End of adapted code
 
-  int selectedRadio = 1; // Button for choosing student or teacher
+  // Button for choosing student role
+  int selectedRadio = 1;
 
+  // Updates the selected radio button state
   setSelectedRadio(int val) {
     setState(() {
       selectedRadio = val;
     });
   }
 
-  // Alert the users if they input a wrong username or password
+  // Alert the users if they enter the wrong credentials
   showAlert(String title, String content) {
     showDialog(
         context: context,
@@ -38,6 +43,7 @@ class _LoginState extends State<Login> {
               TextButton(
                 child: Text("Ok"),
                 onPressed: () {
+                  // Navigate to login page
                   Navigator.of(context).push(
                       MaterialPageRoute(builder: (context) => Login())
                   );
@@ -57,11 +63,11 @@ class _LoginState extends State<Login> {
           return AlertDialog(
             content: Container(
                 alignment: Alignment.center,
-                height: 100,
-                width: 100,
+                height: 90,
+                width: 90,
                 child: Center(
                   child: CircularProgressIndicator(
-                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.blue),
+                    valueColor: new AlwaysStoppedAnimation<Color>(Colors.lightBlue),
                   ),
                 )
             ),
@@ -71,7 +77,7 @@ class _LoginState extends State<Login> {
 
 
 
-  // Login
+  // Handles the login process
   _login() async {
     if (_formKey.currentState!.validate()) {
       showLoadingProgress();
@@ -82,7 +88,7 @@ class _LoginState extends State<Login> {
             username.text, password.text).then((state) {
           print('Login state: $state');
           if (state) {
-
+            // Navigate users to the main student page
             Navigator.of(context).pushReplacementNamed(MainStudentPage.routeName);
           } else {
             showAlert('Oh no!',
@@ -95,6 +101,7 @@ class _LoginState extends State<Login> {
         Provider.of<Teacher>(context, listen: false).teacherLoginAndGetInfo(
             username.text, password.text).then((state) {
           if (state) {
+            // Navigate users to the main teacher page
             Navigator.of(context).pushReplacementNamed(MainTeacherPage.routeName);
           } else {
             showAlert('Oh no!',
@@ -105,6 +112,7 @@ class _LoginState extends State<Login> {
     }
   }
 
+  // Code adapted from Yassein, 2020
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,10 +195,9 @@ class _LoginState extends State<Login> {
                                       borderRadius: BorderRadius.circular(10),
                                       boxShadow: [
                                         BoxShadow(
-                                            color: Color.fromRGBO(
-                                                225, 95, 27, 0.3),
+                                            color: Color.fromRGBO(116, 164, 199, 1),
                                             blurRadius: 20,
-                                            offset: Offset(0, 10)
+                                            offset: Offset(0, 8)
                                         )
                                       ]
                                   ),
@@ -332,7 +339,8 @@ class _LoginState extends State<Login> {
                                           "Login",
                                           style: TextStyle(
                                               color: Colors.white,
-                                              fontWeight: FontWeight.bold
+                                              fontWeight: FontWeight.bold,
+                                            fontSize: 20,
                                           ),
                                         ),
                                         onPressed: () {
@@ -344,6 +352,7 @@ class _LoginState extends State<Login> {
                             ),
                             SizedBox(
                               height: 30,
+                              // End of adapted code
                             ),
                           ],
                         ),

@@ -13,12 +13,13 @@ class Task extends StatefulWidget {
   _TaskState createState() => _TaskState();
 
 }
-
+// Handles the class data fetching and UI updates
 class _TaskState extends State<Task>{
   var classes;
 
   @override
   void initState() {
+    // Use the getHelper to get the task data
     classes = GetHelper.getData(widget.classID, 'get_student_task', 'classID');
     super.initState();
   }
@@ -31,7 +32,7 @@ class _TaskState extends State<Task>{
         decoration: BoxDecoration(
           color: Color.fromRGBO(116, 164, 199, 1),
         ),
-
+        // Code adapted from Yassein, 2020
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -49,6 +50,7 @@ class _TaskState extends State<Task>{
                     Row(
                       children: [
                         IconButton(
+                          // Back arrow button
                           icon: Icon(Icons.arrow_back,
                               color: Colors.white,
                               size: 30
@@ -57,7 +59,7 @@ class _TaskState extends State<Task>{
                             Navigator.pop(context);
                           },
                         ),
-                        SizedBox(width: 110),
+                        SizedBox(width: 100),
                         Text(
                           "Task",
                           style: GoogleFonts.antic(
@@ -74,12 +76,14 @@ class _TaskState extends State<Task>{
                 ],
               ),
             ),
+            // List of tasks
             Expanded(
               child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(100))
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(90),
+                          topRight: Radius.circular(90))
                   ),
                   padding: EdgeInsets.all(20),
 
@@ -93,7 +97,7 @@ class _TaskState extends State<Task>{
                           child: CircularProgressIndicator(),
                         );
                       }
-                      // Display the message if there is no data
+                      // Handles the null values there is no class data or is empty
                       if (!snapshots.hasData || snapshots.data == null || (snapshots.data as List).isEmpty) {
                         return Center(
                             child: Text('You have no tasks',
@@ -104,13 +108,14 @@ class _TaskState extends State<Task>{
                             )
                         );
                       }
-                      // Use snapshots.data as list
+                      // Extract the class list from the data
                       var taskList = snapshots.data as List;
 
                       return ListView.builder(
+                        // Items in the list
                         itemCount: taskList.length,
                         itemBuilder: (context, index) {
-
+                          // Use widget to display each task
                           return TaskWidget(
                             subject: taskList[index]['subject'] ?? 'No Subject',
                             task: taskList[index]['task'] ?? 'No Task',
@@ -123,6 +128,7 @@ class _TaskState extends State<Task>{
 
             ),
           ],
+          // End of adapted code
         ),
       ),
     );

@@ -8,35 +8,40 @@ import 'package:http/http.dart' as http;
 
 class GetHelper{
 
+  // Retrieve the data from the server
   static Future getData (
-      String dataID, String typeOfData, String inputData) async {
+      String studentID, String dataType, String dataKey) async {
     try {
+      // Use POST request to send to the server
       final response = await http.post(
-          Uri.parse("http://10.0.2.2/TuitionGiggle/appData/retrieve_data/$typeOfData.php"),
+          Uri.parse("http://10.0.2.2/TuitionGiggle/appData/retrieve_data/$dataType.php"),
         body: {
-          "$inputData": dataID,
+          "$dataKey": studentID,
         }
       );
 
+      // Check the response.status code 200 is success and response.body is not empty
       if (response.statusCode == 200 && response.body.isNotEmpty) {
 
         String rawResponse = response.body;
         String jsonResponse = rawResponse.replaceFirst("Connected successfully", "").trim();
-
+        // Parse the JSON response
         if (jsonResponse.isNotEmpty) {
           return json.decode(jsonResponse);
         }
       } else {
+        // Display the message
         print("Failed to retrieve data: ${response.statusCode} or the response body is empty");
         return null;
       }
-
+    // Catch the errors in the HTTP request
     } catch (e) {
       print("Error fetching the data: $e");
       return null;
     }
   }
 
+  // Validate the form using form key
   static Future submitComplaints(
       GlobalKey<FormState> formKey,
       BuildContext context,
@@ -45,165 +50,88 @@ class GetHelper{
       String phoneNumber,
       String title,
       String feedback,
-      String tuitionID
-      ) async {
-    if (formKey.currentState!.validate()) {
-      try {
-        var data = {
-          'tuitionID': tuitionID,
-          'role': role,
-          'fullName': fullName,
-          'phoneNumber': phoneNumber,
-          'title': title,
-          'feedback': feedback
-        };
+      String tuitionID) async {
+    // Ensure the form is valid before proceeding
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
 
-        var response = await http.post(
-          Uri.parse("http://10.0.2.2/TuitionGiggle/appData/add_data/insert_complaints.php"),
-          body: json.encode(data),
-        );
+    try {
+      // Prepare the data to send to the server
+      Map<String, String> complaintData = {
+        'tuitionID': tuitionID,
+        'role': role,
+        'fullName': fullName,
+        'phoneNumber': phoneNumber,
+        'title': title,
+        'feedback': feedback,
+      };
 
-        if (response.statusCode == 200) {
-          var msg = jsonDecode(response.body);
-          print(msg);
+      // Send the complaint data to the server
+      final Uri uri = Uri.parse(
+          "http://10.0.2.2/TuitionGiggle/appData/add_data/insert_complaints.php");
+      final response = await http.post(
+          uri,
+          body: json.encode(complaintData));
 
-          showDialog(
-            barrierDismissible: false,
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: Center(child: Text('Thank You!')),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)
-                ),
+      // Check if the response was successful with JSON
+      if (response.statusCode == 200) {
+        final responseMessage = jsonDecode(response.body);
 
-                content: Container(
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: <Widget>[
-                        Center(
-                          child: Text(
-                            msg,
-                            style: GoogleFonts.antic(
-                              textStyle: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20
-                              ),
-                            ),
-                          )
-                        ),
-
-                        Center(
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              backgroundColor: Colors.blueAccent,
-                              foregroundColor: Colors.white,
-                            ),
-                            child: Text("Ok"),
-                            onPressed: () {
-                              Navigator.of(context).pushNamed(MainStudentPage.routeName);
-                            },
-                          ),
-                        )
-
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            }
-          );
-        }
+        print('Complaint submitted successfully: $responseMessage');
       }
-      catch (e) {
-        print (e);
-      }
+    } catch (e) {
+      // Catch and print any errors that occur during the HTTP request
+      print('Error submitting complaint: $e');
     }
   }
 
-  static Future submitTask(
-      GlobalKey<FormState> formKey,
-      BuildContext context,
-      String tuitionID,
-      String classID,
-      String subject,
-      String task
-      ) async {
-    if (formKey.currentState!.validate()) {
+    // Validate the form using form key
+    static Future submitTask(
+    GlobalKey<FormState> formKey,
+    BuildContext context,
+    String tuitionID,
+    String classID,
+    String subject,
+    String task) async {
+
+      // Validate the form before proceeding
+      if (!formKey.currentState!.validate()) {
+        return;
+      }
+
       try {
-        var data = {
+        // Prepare the data to send to the server
+        Map<String, String> taskData = {
           'tuitionID': tuitionID,
           'classID': classID,
           'subject': subject,
           'task': task,
         };
 
-        var response = await http.post(
-          Uri.parse("http://10.0.2.2/TuitionGiggle/appData/add_data/insert_tasks.php"),
+        // Send the task data to the server
+        final Uri uri = Uri.parse("http://10.0.2.2/TuitionGiggle/appData/add_data/insert_tasks.php");
+
+        // Send the task data to the server as a POST request
+        final response = await http.post(
+          uri,
           headers: {"Content-Type": "application/json"},
-          body: json.encode(data),
+          body: json.encode(taskData),
         );
 
+        // Handle the response from the server
         if (response.statusCode == 200) {
-          var msg = jsonDecode(response.body);
-          print('Response server: $msg');
+          // Parse the response message
+          final msg = jsonDecode(response.body);
+          print('Server Response: $msg');
 
-          showDialog(
-              barrierDismissible: false,
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  title: Center(child: Text('Thank You!')),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10)
-                  ),
+        } else {
 
-                  content: Container(
-                    height: MediaQuery
-                        .of(context)
-                        .size
-                        .height * 0.1,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          Center(
-                              child: Text(
-                                msg,
-                                style: GoogleFonts.antic(
-                                  textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20
-                                  ),
-                                ),
-                              )
-                          ),
-
-                          Center(
-                            child: TextButton(
-                              style: TextButton.styleFrom(
-                                backgroundColor: Colors.blueAccent,
-                                foregroundColor: Colors.white,
-                              ),
-                              child: Text("Ok"),
-                              onPressed: () {
-                                Navigator.of(context).pushNamed(MainTeacherPage.routeName);
-                              },
-                            ),
-                          )
-
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              });
+          print('Failed to submit task: ${response.statusCode}');
         }
       } catch (e) {
-        print(e);
+
+        print('Error submitting task: $e');
       }
     }
-  }
 }

@@ -9,9 +9,9 @@ import '../../widget-components/cardItem.dart';
 import '../login.dart';
 import '../students/student_announcement.dart';
 
-
+// This is the home main page for teachers
 class MainTeacherPage extends StatefulWidget {
-
+  // Navigate teacher users to this page name
   static const routeName = '/main-teacher-page';
 
   @override
@@ -33,6 +33,7 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
 
   @override
   Widget build(BuildContext context) {
+    // Retrieve the teacher data using Provider
     getTeacherInfo = Provider.of<Teacher>(context).getTeacherInfo();
 
     teacherID = getTeacherInfo.teacherID;
@@ -43,6 +44,7 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
     teacherAddress = getTeacherInfo.address;
     tuitionID = getTeacherInfo.tuitionID;
 
+    // Code adapted from Yassein, 2020
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold (
@@ -63,7 +65,7 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
                     SizedBox(
                       height: 50,
                     ),
-
+                    // Place teacher information header in the center
                     Center(
                       child: FadeAnimation(
                         1.3,
@@ -100,7 +102,7 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
               SizedBox(
                 height: 20,
               ),
-
+              // Display all the card items
               Expanded(
                 child: Container(
                   width: double.infinity,
@@ -115,7 +117,7 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
                   child: GridView.count(
                     primary: false,
                     padding: const EdgeInsets.all(20.0),
-                    crossAxisSpacing: 10,
+                    crossAxisSpacing: 10, // grid spacing
                     crossAxisCount: 2,
                     children: <Widget>[
 
@@ -126,6 +128,7 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
                         function: () {
                           Navigator.push(
                             context,
+                            // Navigate user to the TeacherBio page
                             MaterialPageRoute(
                               builder: (context) => TeacherBio(
                                 fullName: getTeacherInfo.fullName,
@@ -167,7 +170,7 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
                         );
                         }
                       ),
-
+                      // Logout and direct users to login page
                       CardItem(
                           desc: 'Logout',
                           img: 'assets/logout.png',
@@ -190,5 +193,6 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
         ),
       ),
     );
+    // End of adapted code
   }
 }

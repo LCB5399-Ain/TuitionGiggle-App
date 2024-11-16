@@ -16,7 +16,8 @@ class StudentComplaints extends StatefulWidget {
 
 class _StudentComplaintsState extends State<StudentComplaints> {
 
-  // Form Key
+  // Validate the form with form key
+  // Code adapted from Arora, 2024
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   TextEditingController roleControl = new TextEditingController();
@@ -24,11 +25,12 @@ class _StudentComplaintsState extends State<StudentComplaints> {
   TextEditingController phoneNumberControl = new TextEditingController();
   TextEditingController titleControl = new TextEditingController();
   TextEditingController feedbackControl = new TextEditingController();
+  // End of adapted code
+
 
   @override
   void initState() {
     super.initState();
-    print(widget.tuitionID);
   }
 
   @override
@@ -39,6 +41,7 @@ class _StudentComplaintsState extends State<StudentComplaints> {
         decoration: BoxDecoration(
           color: Color.fromRGBO(116, 164, 199, 1),
         ),
+          // Code adapted from Yassein, 2020
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -56,6 +59,7 @@ class _StudentComplaintsState extends State<StudentComplaints> {
                       Row(
                         children: [
                           IconButton(
+                            // Back arrow button
                             icon: Icon(Icons.arrow_back,
                                 color: Colors.white,
                                 size: 30
@@ -111,6 +115,7 @@ class _StudentComplaintsState extends State<StudentComplaints> {
                                 )
                               ]
                             ),
+                            // Show task
                             child: Form(
                               key: _formKey,
                               child: Column(children: <Widget>[
@@ -137,13 +142,15 @@ class _StudentComplaintsState extends State<StudentComplaints> {
                                     style: TextStyle(
                                       fontSize: 18,
                                     ),
+                                    // Relationship validation
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'State your relationship';
-                                      } else {
+                                      } else if (!RegExp(r"^[a-zA-Z\s']+$").hasMatch(value!)) {
+                                        return 'Enter a valid title';
+                                        }
                                         return null;
-                                      }
-                                    }, // Relationship validation
+                                    },
                                   ),
                                 ),
                                 Container(
@@ -170,6 +177,7 @@ class _StudentComplaintsState extends State<StudentComplaints> {
                                     style: TextStyle(
                                       fontSize: 18,
                                     ),
+                                    // Name validation
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Name is required';
@@ -177,7 +185,7 @@ class _StudentComplaintsState extends State<StudentComplaints> {
                                         return 'Enter a valid name';
                                       }
                                         return null;
-                                    }, // Name validation
+                                    },
                                   ),
                                 ),
                                 Container(
@@ -209,7 +217,7 @@ class _StudentComplaintsState extends State<StudentComplaints> {
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Phone number is required';
-                                      } else if (!RegExp(r'^\+?([0-9]{1,3})?[-.●]?([0-9]{10})$').hasMatch(value!)) {
+                                      } else if (!RegExp(r'^\d{7}$').hasMatch(value!)) {
                                         return 'Enter a valid phone number';
                                       }
                                       return null;
@@ -240,6 +248,7 @@ class _StudentComplaintsState extends State<StudentComplaints> {
                                     style: TextStyle(
                                       fontSize: 18,
                                     ),
+                                    // Title validation
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Title is required';
@@ -247,7 +256,7 @@ class _StudentComplaintsState extends State<StudentComplaints> {
                                         return 'Enter a valid name';
                                       }
                                         return null;
-                                    }, // Title validation
+                                    },
                                   ),
                                 ),
                                 Container(
@@ -274,13 +283,14 @@ class _StudentComplaintsState extends State<StudentComplaints> {
                                     style: TextStyle(
                                       fontSize: 18,
                                     ),
+                                    // Complaint validation
                                     validator: (value) {
                                       if (value!.isEmpty || value.length < 20) {
                                         return 'Your message should contain at least 20 characters.';
                                       } else {
                                         return null;
                                       }
-                                    }, // Complaint validation
+                                    },
                                   ),
                                 ),
                                 SizedBox(
@@ -307,7 +317,7 @@ class _StudentComplaintsState extends State<StudentComplaints> {
                                               fontSize: 18,
                                             ),
                                           ),
-                                          // Button to submit complaints using GetHelper
+                                          // // Validate and submit complaints using GetHelper
                                           onPressed: () {
                                             GetHelper.submitComplaints(_formKey, context, roleControl.text, fullNameControl.text, phoneNumberControl.text, titleControl.text, feedbackControl.text, widget.tuitionID);
                                           }
@@ -330,6 +340,7 @@ class _StudentComplaintsState extends State<StudentComplaints> {
             )
         ]
         )
+        // End of adapted code
       )
     );
   }

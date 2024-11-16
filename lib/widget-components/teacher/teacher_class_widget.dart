@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// Class information and task in widgets
 class TeacherClassWidget extends StatelessWidget {
   final String classroom;
   final String subject;
@@ -55,7 +56,7 @@ class TeacherClassWidget extends StatelessWidget {
                     color: Colors.grey[700],
                   ),
                 ),
-
+            // Trailing section
             trailing: TextButton(
               child: Text('Add Task',
                 style: TextStyle(color: Colors.white),

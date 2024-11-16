@@ -26,7 +26,7 @@ class _TeacherBioState extends State<TeacherBio> {
   void initState() {
     super.initState();
 
-    // Set variables with widget properties
+    // Set the variables with widget properties
     fullName = widget.fullName;
     subject = widget.subject;
     email = widget.email;
@@ -54,6 +54,7 @@ class _TeacherBioState extends State<TeacherBio> {
                     1.3,
                     Row(
                       children: [
+                        // Back arrow button
                         IconButton(
                           icon: Icon(Icons.arrow_back,
                               color: Colors.white,
@@ -80,12 +81,14 @@ class _TeacherBioState extends State<TeacherBio> {
                 ],
               ),
             ),
+            // Main content page
             Expanded(
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(topRight: Radius.circular(100)),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(90),
+                      topRight: Radius.circular(90)),
                 ),
                 padding: EdgeInsets.all(20),
                 child: Column(

@@ -3,10 +3,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 
 class CardItem extends StatelessWidget {
-  final String desc;
-  final String img;
-  final Color color;
-  final VoidCallback function;
+  final String desc; // Text displayed
+  final String img; // Image displayed
+  final Color color; // Background color
+  final VoidCallback function; // Trigger callback function
+
   const CardItem({required this.desc, required this.img, required this.color, required this.function});
 
   @override
@@ -14,28 +15,34 @@ class CardItem extends StatelessWidget {
     return GestureDetector(
       onTap: function,
       child: Container(
+        // Card Widget
         child: Card(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
+            borderRadius: BorderRadius.circular(20.0),
           ),
           color: color,
-          elevation: 10,
+          // Shadow effect
+          elevation: 15,
           child: Center(
             child: Column(
+              // Minimal space
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Image.asset(img,
-                width: 90,
-                  height: 90,
+                width: 85,
+                  height: 85,
                 ),
 
+                // Description text
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     desc,
                     style: GoogleFonts.antic(
                       textStyle: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20
+                        color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20
                       ),
                     ),
                     textAlign: TextAlign.center,

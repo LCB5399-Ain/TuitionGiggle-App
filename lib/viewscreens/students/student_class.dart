@@ -16,18 +16,19 @@ class StudentClass extends StatefulWidget {
   _StudentClassState createState() => _StudentClassState();
 
 }
-
+// Handles the class data fetching and UI updates
 class _StudentClassState extends State<StudentClass> {
-
+  // Class variable to hold other class data.
   var classes;
 
   @override
   void initState() {
+    // Use the getHelper to get the class data
     classes = GetHelper.getData(widget.studentID, 'get_student_class', 'studentID');
     super.initState();
   }
 
-  // SHOW TASK Button
+  // Navigate students to the 'Show Task' page
   _navigateTaskPage(String? classID) {
     // Check if classID (TaskID) is null before proceeding
     if (classID != null && classID.isNotEmpty) {
@@ -63,7 +64,7 @@ class _StudentClassState extends State<StudentClass> {
         decoration: BoxDecoration(
             color: Color.fromRGBO(116, 164, 199, 1)
         ),
-
+        // Code adapted from Yassein, 2020
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -79,6 +80,7 @@ class _StudentClassState extends State<StudentClass> {
                     Row(
                         children: [
                     IconButton(
+                      // Back arrow button
                     icon: Icon(Icons.arrow_back,
                         color: Colors.white,
                         size: 30
@@ -104,12 +106,14 @@ class _StudentClassState extends State<StudentClass> {
                 ],
               ),
             ),
+            // List of classes
           Expanded(
             child: Container(
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.only(topRight: Radius.circular(100))
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(90),
+                    topRight: Radius.circular(90))
               ),
               padding: EdgeInsets.all(20),
 
@@ -122,7 +126,7 @@ class _StudentClassState extends State<StudentClass> {
                         child: CircularProgressIndicator(),
                       );
                     }
-                    // Display the message if there is no data
+                    // Handles the null values there is no class data or is empty
                     if (!snapshots.hasData || snapshots.data == null || (snapshots.data as List).isEmpty) {
                       return Center(
                           child: Text('You have no classes right now',
@@ -133,17 +137,19 @@ class _StudentClassState extends State<StudentClass> {
                           )
                       );
                     }
-                    // Use snapshots.data as list
+                    // Extract the class list from the data
                     var classList = snapshots.data as List;
 
                     return ListView.builder(
+                      // Items in the list
                       itemCount: classList.length,
                       itemBuilder: (context, index) {
-
+                        // Use widget to display each class
                         return ClassWidget(
                           classroom: classList[index]['classroom'] ?? 'No Classroom',
                           subject: classList[index]['subject'] ?? 'No Subject',
                           time: classList[index]['time_of_room'] ?? 'No Time',
+                          // Pass the classID to the task page
                           function: () =>
                               _navigateTaskPage(classList[index]['classID']),
                         );
@@ -154,6 +160,7 @@ class _StudentClassState extends State<StudentClass> {
 
           ),
           ],
+          // End of adapted code
         ),
         ),
     );

@@ -16,16 +16,16 @@ class TeacherTask extends StatefulWidget {
 
 class _TeacherTaskState extends State<TeacherTask> {
 
-  // Form Key
+  // Validate the form with form key
+  // Code adapted from Arora, 2024
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
   TextEditingController subjectControl = new TextEditingController();
   TextEditingController taskControl = new TextEditingController();
+  // End of adapted code
 
   @override
   void initState() {
     super.initState();
-    print(widget.tuitionID);
   }
 
   @override
@@ -36,6 +36,7 @@ class _TeacherTaskState extends State<TeacherTask> {
             decoration: BoxDecoration(
                 color: Color.fromRGBO(116, 164, 199, 1)
             ),
+            // Code adapted from Yassein, 2020
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -53,6 +54,7 @@ class _TeacherTaskState extends State<TeacherTask> {
                           Row(
                             children: [
                               IconButton(
+                                // Back arrow button
                                 icon: Icon(Icons.arrow_back,
                                     color: Colors.white,
                                     size: 30
@@ -84,8 +86,8 @@ class _TeacherTaskState extends State<TeacherTask> {
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(60),
-                                  topRight: Radius.circular(60)
+                                  topLeft: Radius.circular(90),
+                                  topRight: Radius.circular(90)
                               )
                           ),
                           child: Padding(
@@ -95,7 +97,7 @@ class _TeacherTaskState extends State<TeacherTask> {
                                     SizedBox(
                                       height: 60,
                                     ),
-                                    FadeAnimation(1.4,
+                                    FadeAnimation(1.2,
                                       Container(
                                         decoration: BoxDecoration(
                                             color: Colors.white,
@@ -108,6 +110,7 @@ class _TeacherTaskState extends State<TeacherTask> {
                                               )
                                             ]
                                         ),
+                                        // Add Task form
                                         child: Form(
                                           key: _formKey,
                                           child: Column(children: <Widget>[
@@ -134,11 +137,12 @@ class _TeacherTaskState extends State<TeacherTask> {
                                                 style: TextStyle(
                                                   fontSize: 18,
                                                 ),
+                                                // Title validation
                                                 validator: (value) {
                                                   if (value!.isEmpty) {
                                                     return 'Title is required';
                                                   } else if (!RegExp(r"^[a-zA-Z\s']+$").hasMatch(value!)) {
-                                                    return 'Enter a valid name';
+                                                    return 'Enter a valid title';
                                                   }
                                                   return null;
                                                 },
@@ -159,12 +163,13 @@ class _TeacherTaskState extends State<TeacherTask> {
                                               child: TextFormField(
                                                 controller: taskControl,
                                                 decoration: InputDecoration(
-                                                    labelText: "Enter Task Description",
+                                                    labelText: "Enter Description",
                                                     hintStyle: TextStyle(color: Colors.grey,
                                                       fontSize: 22,
                                                     ),
                                                     border: InputBorder.none
                                                 ),
+                                                // Task validation
                                                 validator: (value) {
                                                   if (value == null || value.length < 10) {
                                                     return 'Please provide a task description with at least 10 characters.';
@@ -177,7 +182,7 @@ class _TeacherTaskState extends State<TeacherTask> {
                                             SizedBox(
                                               height: 40,
                                             ),
-                                            FadeAnimation(1.6,
+                                            FadeAnimation(1.4,
                                                 Container(
                                                   height: 50,
                                                   margin: EdgeInsets.symmetric(
@@ -198,7 +203,7 @@ class _TeacherTaskState extends State<TeacherTask> {
                                                               fontSize: 18
                                                           ),
                                                         ),
-                                                        // Button to submit task using GetHelper
+                                                        // Validate and submit task using GetHelper
                                                         onPressed: () {
                                                           GetHelper.submitTask(_formKey, context, widget.tuitionID, widget.classID, subjectControl.text, taskControl.text);
                                                         }
@@ -221,6 +226,7 @@ class _TeacherTaskState extends State<TeacherTask> {
                   )
                 ]
             )
+            // End of adapted code
         )
     );
   }

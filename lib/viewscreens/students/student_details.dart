@@ -56,6 +56,7 @@ class _StudentBioState extends State<StudentBio> {
               Row(
                 children: [
                   IconButton(
+                    // Back arrow button
                     icon: Icon(Icons.arrow_back,
                         color: Colors.white,
                         size: 30
@@ -64,7 +65,7 @@ class _StudentBioState extends State<StudentBio> {
                       Navigator.pop(context);
                     },
                   ),
-                  SizedBox(width: 15),
+                  SizedBox(width: 14),
                   Text(
                     "Student Information",
                     style: GoogleFonts.antic(
@@ -81,25 +82,28 @@ class _StudentBioState extends State<StudentBio> {
           ],
         ),
         ),
+              // Main content page
               Expanded(
                 child: Container(
                   width: double.infinity,
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.only(topRight: Radius.circular(100)),
+                    borderRadius: BorderRadius.only(topLeft: Radius.circular(90),
+                        topRight: Radius.circular(90)),
                   ),
                   padding: EdgeInsets.all(20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Container(
-                          width: 360,
-                          height: 360,
+                          width: 320,
+                          height: 320,
                           decoration: BoxDecoration(
                             shape: BoxShape.rectangle,
                             borderRadius: BorderRadius.circular(15),
                             image: DecorationImage(
-                              image: AssetImage('assets/student_profile.jpg'),
+                              image: AssetImage('assets/student_bio1.jpg',
+                              ),
                               fit: BoxFit.cover,
                           ),
                         ),

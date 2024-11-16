@@ -13,12 +13,14 @@ class StudentAnnouncement extends StatefulWidget {
   
 }
 
+// Handles the announcement data fetching and UI updates
 class _StudentAnnouncementState extends State<StudentAnnouncement> {
   var announcements;
 
   @override
   void initState() {
     super.initState();
+    // Use the getHelper to get the announcement data
     announcements = GetHelper.getData(
         widget.tuitionID, 'get_student_announcement', 'tuitionID');
 
@@ -37,6 +39,7 @@ class _StudentAnnouncementState extends State<StudentAnnouncement> {
             color: Color.fromRGBO(116, 164, 199, 1)
         ),
         child: Column(
+          // Code adapted from Yassein, 2020
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
@@ -50,6 +53,7 @@ class _StudentAnnouncementState extends State<StudentAnnouncement> {
                     Row(
                       children: [
                         IconButton(
+                          // Back arrow button
                           icon: Icon(Icons.arrow_back,
                               color: Colors.white,
                               size: 30
@@ -75,14 +79,18 @@ class _StudentAnnouncementState extends State<StudentAnnouncement> {
                 ],
               ),
             ),
+            // List of announcements
             Expanded(
               child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(topRight: Radius.circular(100)),
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(90),
+                      topRight: Radius.circular(90)),
                 ),
                 padding: EdgeInsets.all(20),
+
+                // // Use list view to show the data
                 child: FutureBuilder(
                   future: announcements,
                   builder: (context, snapshots) {
@@ -92,7 +100,7 @@ class _StudentAnnouncementState extends State<StudentAnnouncement> {
                         child: CircularProgressIndicator(),
                       );
                     }
-                    // Display the message if there is no data
+                    // Handles the null values there is no announcement data or is empty
                     if (snapshots.hasError || !snapshots.hasData || snapshots.data == null || (snapshots.data as List).isEmpty) {
                       return Center(
                         child: Text('There is no announcement available at the moment.',
@@ -104,7 +112,7 @@ class _StudentAnnouncementState extends State<StudentAnnouncement> {
                       );
                     }
 
-                    // Use snapshots.data as list
+                    // Extract the class list from the data
                     var announcementList = snapshots.data as List;
 
                     return ListView.builder(
@@ -113,6 +121,7 @@ class _StudentAnnouncementState extends State<StudentAnnouncement> {
                         String title = announcementList[index]['title'] ?? 'No Title';
                         String announcement = announcementList[index]['announcement'] ?? 'No Announcement';
                         String dateOfAnnouncement = announcementList[index]['date_of_announcement'] ?? 'Unknown Date';
+                        // End of adapted code
 
                         return Card(
                           margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),

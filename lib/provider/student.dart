@@ -16,24 +16,29 @@ class StudentInfo{
   StudentInfo({required this.studentID, required this.tuitionID, required this.fullName, required this.year, required this.dateOfBirth, required this.address, required this.dateOfRegister});
 
 }
-
+// Manage student data and handles login
 class Student with ChangeNotifier {
   late StudentInfo _info;
 
+  // Use getter to retrieve the student data
   StudentInfo getStudentInfo() {
     return _info;
   }
 
+  // Use setter to update student data
   void setStudentInfo(StudentInfo info){
-    _info=info;
+    _info = info;
     print(_info);
+    // Notify all the listeners about the new change
     notifyListeners();
   }
 
+  // Handle the student login with username and password
   Future<bool> loginStudentAndGetInfo(String username, String password) async{
     var response;
 
     try {
+      // Send the POST request
       response = await http.post(
           Uri.parse("http://10.0.2.2/TuitionGiggle/appData/login_students.php"),
           body: {
@@ -42,6 +47,7 @@ class Student with ChangeNotifier {
           }
       );
 
+      // Check if the response status is successful
       if (response.statusCode == 200) {
         var rawResponse = response.body;
 
@@ -51,7 +57,7 @@ class Student with ChangeNotifier {
 
         // Decode the cleaned response
         var datauser = await json.decode(rawResponse);
-
+        // Update the student data if response data is not empty
         if (datauser.isNotEmpty) {
           insertInfo(datauser);
           return true;
@@ -64,6 +70,7 @@ class Student with ChangeNotifier {
     return false;
   }
 
+  // Insert the retrieved data into the student data object
   insertInfo(dynamic datauser) {
     StudentInfo studentInfo = StudentInfo(
       studentID: datauser[0]['studentID'],
@@ -78,9 +85,10 @@ class Student with ChangeNotifier {
     setStudentInfo(studentInfo);
   }
 
+  // Log out the students
   logOut(){
     _info = new StudentInfo(studentID: '', tuitionID: '', fullName: '', year: '', dateOfBirth: '', address: '', dateOfRegister: '');
-    notifyListeners();
+    notifyListeners(); // Notify about the logout
     print(_info.studentID);
   }
 

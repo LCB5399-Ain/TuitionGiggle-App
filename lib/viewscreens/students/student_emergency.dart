@@ -14,14 +14,15 @@ class StudentEmergency extends StatefulWidget {
   _StudentEmergencyState createState() => _StudentEmergencyState();
 
 }
-
+// Handles the contact data fetching and UI updates
 class _StudentEmergencyState extends State<StudentEmergency>{
-
+  // variable to hold other contacts data.
   var emergencyContact;
 
   @override
   void initState() {
     super.initState();
+    // Use the getHelper to get the contact data
     emergencyContact = GetHelper.getData(widget.studentID, 'get_student_emergencyContacts', 'studentID');
 
   }
@@ -35,6 +36,7 @@ class _StudentEmergencyState extends State<StudentEmergency>{
             color: Color.fromRGBO(116, 164, 199, 1),
         ),
         child: Column(
+          // Code adapted from Yassein, 2020
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
@@ -48,6 +50,7 @@ class _StudentEmergencyState extends State<StudentEmergency>{
                     Row(
                       children: [
                         IconButton(
+                          // Back arrow button
                           icon: Icon(Icons.arrow_back,
                               color: Colors.white,
                               size: 30
@@ -56,9 +59,9 @@ class _StudentEmergencyState extends State<StudentEmergency>{
                             Navigator.pop(context);
                           },
                         ),
-                        SizedBox(width: 10),
+                        SizedBox(width: 70),
                         Text(
-                          "Emergency Contact",
+                          "Contacts",
                           style: GoogleFonts.antic(
                             textStyle: TextStyle(
                               color: Colors.white,
@@ -73,13 +76,15 @@ class _StudentEmergencyState extends State<StudentEmergency>{
                 ],
               ),
             ),
+            // List of contacts
                Expanded(
                   child: Container(
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(100))
+                          topLeft: Radius.circular(90),
+                          topRight: Radius.circular(90))
                         ),
                     padding: EdgeInsets.all(20),
 
@@ -92,7 +97,7 @@ class _StudentEmergencyState extends State<StudentEmergency>{
                             child: CircularProgressIndicator(),
                           );
                         }
-                        // Display the message if there is no data
+                        // Handles the null values there is no contact data or is empty
                         if (!snapshots.hasData || snapshots.data == null || (snapshots.data as List).isEmpty) {
                           return Center(
                             child: Text('There are no emergency contacts for this student',
@@ -104,13 +109,14 @@ class _StudentEmergencyState extends State<StudentEmergency>{
                           );
                         }
 
-                        // Use snapshots.data as list
+                        // Extract the contact list from the data
                         var emergencyList = snapshots.data as List;
 
                         return ListView.builder(
+                          // Items in the list
                         itemCount: emergencyList.length,
                         itemBuilder: (context, index) {
-
+                          // Use widget to display each contact
                           return EmergencyWidget(
                             relationship: emergencyList[index]['relationship'],
                             fullName: emergencyList[index]['fullName'],
@@ -125,6 +131,7 @@ class _StudentEmergencyState extends State<StudentEmergency>{
                ),
           ],
         ),
+        // End of adapted code
       ),
     );
   }
