@@ -5,25 +5,29 @@ import 'package:tuitiongiggle/viewscreens/students/main_student_page.dart';
 import '../viewscreens/teachers/main_teacher_page.dart';
 import 'package:http/http.dart' as http;
 
+var apiShortcut = 'http://10.0.2.2/TuitionGiggle';
 
 class GetHelper{
 
   // Retrieve the data from the server
-  static Future getData (
-      String studentID, String dataType, String dataKey) async {
+  static Future<dynamic> fetchData (
+      String studentID,
+      String dataType,
+      String dataKey) async {
+
     try {
       // Use POST request to send to the server
-      final response = await http.post(
+      final responseUrl = await http.post(
           Uri.parse("http://10.0.2.2/TuitionGiggle/appData/retrieve_data/$dataType.php"),
-        body: {
+         body: {
           "$dataKey": studentID,
-        }
+        },
       );
 
       // Check the response.status code 200 is success and response.body is not empty
-      if (response.statusCode == 200 && response.body.isNotEmpty) {
+      if (responseUrl.statusCode == 200 && responseUrl.body.isNotEmpty) {
 
-        String rawResponse = response.body;
+        String rawResponse = responseUrl.body;
         String jsonResponse = rawResponse.replaceFirst("Connected successfully", "").trim();
         // Parse the JSON response
         if (jsonResponse.isNotEmpty) {
@@ -31,7 +35,7 @@ class GetHelper{
         }
       } else {
         // Display the message
-        print("Failed to retrieve data: ${response.statusCode} or the response body is empty");
+        print("Failed to retrieve data: ${responseUrl.statusCode} or the response body is empty");
         return null;
       }
     // Catch the errors in the HTTP request
@@ -41,8 +45,9 @@ class GetHelper{
     }
   }
 
+  // Code adapted from Yassein, 2020
   // Validate the form using form key
-  static Future submitComplaints(
+  static Future<void> submitComplaints(
       GlobalKey<FormState> formKey,
       BuildContext context,
       String role,
@@ -58,21 +63,20 @@ class GetHelper{
 
     try {
       // Prepare the data to send to the server
-      Map<String, String> complaintData = {
-        'tuitionID': tuitionID,
-        'role': role,
-        'fullName': fullName,
-        'phoneNumber': phoneNumber,
-        'title': title,
-        'feedback': feedback,
-      };
-
-      // Send the complaint data to the server
-      final Uri uri = Uri.parse(
+      final uri = Uri.parse(
           "http://10.0.2.2/TuitionGiggle/appData/add_data/insert_complaints.php");
       final response = await http.post(
-          uri,
-          body: json.encode(complaintData));
+        uri,
+        headers: {"Content-Type": "application/json"},
+        body: json.encode({
+          'tuitionID': tuitionID,
+          'role': role,
+          'fullName': fullName,
+          'phoneNumber': phoneNumber,
+          'title': title,
+          'feedback': feedback,
+        }),
+      );
 
       // Check if the response was successful with JSON
       if (response.statusCode == 200) {
@@ -87,13 +91,14 @@ class GetHelper{
   }
 
     // Validate the form using form key
-    static Future submitTask(
+    static Future<void> submitTask(
     GlobalKey<FormState> formKey,
     BuildContext context,
     String tuitionID,
     String classID,
     String subject,
-    String task) async {
+    String task
+        ) async {
 
       // Validate the form before proceeding
       if (!formKey.currentState!.validate()) {
@@ -102,22 +107,19 @@ class GetHelper{
 
       try {
         // Prepare the data to send to the server
-        Map<String, String> taskData = {
-          'tuitionID': tuitionID,
-          'classID': classID,
-          'subject': subject,
-          'task': task,
-        };
-
-        // Send the task data to the server
-        final Uri uri = Uri.parse("http://10.0.2.2/TuitionGiggle/appData/add_data/insert_tasks.php");
-
-        // Send the task data to the server as a POST request
+        final uri = Uri.parse(
+            "http://10.0.2.2/TuitionGiggle/appData/add_data/insert_tasks.php");
         final response = await http.post(
           uri,
           headers: {"Content-Type": "application/json"},
-          body: json.encode(taskData),
+          body: json.encode({
+            'tuitionID': tuitionID,
+            'classID': classID,
+            'subject': subject,
+            'task': task,
+          }),
         );
+        // End of adapted code
 
         // Handle the response from the server
         if (response.statusCode == 200) {

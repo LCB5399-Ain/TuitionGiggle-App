@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../animation/FadeAnimation.dart';
+import 'package:tuitiongiggle/viewscreens/teachers/teacher_class.dart';
+import '../../animation/AnimationWidget.dart';
 import '../../gethelper/getHelper.dart';
 
 class TeacherTask extends StatefulWidget {
@@ -18,14 +19,22 @@ class _TeacherTaskState extends State<TeacherTask> {
 
   // Validate the form with form key
   // Code adapted from Arora, 2024
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController subjectControl = new TextEditingController();
-  TextEditingController taskControl = new TextEditingController();
+  GlobalKey<FormState> _taskFormKey = GlobalKey<FormState>();
+  TextEditingController subjectTeacherControl = new TextEditingController();
+  TextEditingController taskTeacherControl = new TextEditingController();
   // End of adapted code
 
   @override
   void initState() {
     super.initState();
+    subjectTeacherControl.addListener(() {
+      // Changes in the subject field
+      print('Subject input changed: ${subjectTeacherControl.text}');
+    });
+    taskTeacherControl.addListener(() {
+      // Changes in the task field
+      print('Task input changed: ${taskTeacherControl.text}');
+    });
   }
 
   @override
@@ -38,7 +47,8 @@ class _TeacherTaskState extends State<TeacherTask> {
             ),
             // Code adapted from Yassein, 2020
             child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.all(20),
@@ -49,8 +59,8 @@ class _TeacherTaskState extends State<TeacherTask> {
                           height: 30,
                         ),
 
-                        FadeAnimation(
-                          1.3,
+                        WidgetFadeAnimation(
+                          1.4,
                           Row(
                             children: [
                               IconButton(
@@ -66,10 +76,10 @@ class _TeacherTaskState extends State<TeacherTask> {
                               SizedBox(width: 60),
                               Text(
                                 "Add Task",
-                                style: GoogleFonts.antic(
+                                style: GoogleFonts.lato(
                                   textStyle: TextStyle(
                                     color: Colors.white,
-                                    fontWeight: FontWeight.bold,
+                                    fontWeight: FontWeight.w600,
                                   ),
                                   fontSize: 40,
                                 ),
@@ -91,13 +101,13 @@ class _TeacherTaskState extends State<TeacherTask> {
                               )
                           ),
                           child: Padding(
-                              padding: EdgeInsets.all(30),
+                              padding: EdgeInsets.all(28),
                               child: SingleChildScrollView(
-                                  child: Column(children: <Widget>[
-                                    SizedBox(
-                                      height: 60,
+                                  child: Column(
+                                      children: <Widget>[
+                                     const SizedBox(height: 60,
                                     ),
-                                    FadeAnimation(1.2,
+                                    WidgetFadeAnimation(1.2,
                                       Container(
                                         decoration: BoxDecoration(
                                             color: Colors.white,
@@ -105,38 +115,49 @@ class _TeacherTaskState extends State<TeacherTask> {
                                             boxShadow: [
                                               BoxShadow(
                                                   color: Color.fromRGBO(116, 164, 199, 1),
-                                                  blurRadius: 20,
-                                                  offset: Offset(0, 10)
+                                                  blurRadius: 18,
+                                                  offset: Offset(0, 13)
                                               )
                                             ]
                                         ),
                                         // Add Task form
                                         child: Form(
-                                          key: _formKey,
-                                          child: Column(children: <Widget>[
+                                          key: _taskFormKey,
+                                          child: Column(
+                                              children: <Widget>[
                                             Container(
                                               width: double.infinity,
                                               padding: EdgeInsets.all(10),
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
-                                                  border: Border(
-                                                      bottom: BorderSide(
-                                                          color: Colors.grey.shade200
-                                                      )
-                                                  )
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(
+                                                  color: Colors.grey.shade300,
+                                                  width: 0.5,
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.withOpacity(0.2), // Light shadow for a soft effect
+                                                    blurRadius: 6,
+                                                  ),
+                                                ],
                                               ),
+
+                                              // Code adapted from Algolia, 2024
                                               child: TextFormField(
-                                                controller: subjectControl,
-                                                decoration: InputDecoration(
+                                                controller: subjectTeacherControl,
+                                                decoration:  const InputDecoration(
                                                     labelText: "Title",
-                                                    hintStyle: TextStyle(color: Colors.grey,
-                                                      fontSize: 22,
+                                                    hintStyle: TextStyle(color: Colors.black,
+                                                      fontSize: 25,
                                                     ),
                                                     border: InputBorder.none
                                                 ),
+                                                // End of adapted code
                                                 style: TextStyle(
                                                   fontSize: 18,
                                                 ),
+
                                                 // Title validation
                                                 validator: (value) {
                                                   if (value!.isEmpty) {
@@ -150,25 +171,34 @@ class _TeacherTaskState extends State<TeacherTask> {
                                             ),
                                             Container(
                                               width: double.infinity,
-                                              padding: EdgeInsets.all(10),
+                                              padding: EdgeInsets.all(12),
                                               decoration: BoxDecoration(
                                                   color: Colors.white,
-                                                  border: Border(
-                                                      bottom: BorderSide(
-                                                          color: Colors.grey.shade200
-                                                      )
-                                                  )
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(
+                                                  color: Colors.grey.shade300,
+                                                  width: 0.5,
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.grey.withOpacity(0.2),
+                                                    blurRadius: 6,
+                                                  ),
+                                                ],
                                               ),
 
+                                              // Code adapted from Algolia, 2024
                                               child: TextFormField(
-                                                controller: taskControl,
-                                                decoration: InputDecoration(
+                                                controller: taskTeacherControl,
+                                                decoration:  const InputDecoration(
                                                     labelText: "Enter Description",
-                                                    hintStyle: TextStyle(color: Colors.grey,
-                                                      fontSize: 22,
+                                                    hintStyle: TextStyle(color: Colors.black,
+                                                      fontSize: 25,
                                                     ),
                                                     border: InputBorder.none
                                                 ),
+                                                // End of adapted code
+
                                                 // Task validation
                                                 validator: (value) {
                                                   if (value == null || value.length < 10) {
@@ -182,14 +212,14 @@ class _TeacherTaskState extends State<TeacherTask> {
                                             SizedBox(
                                               height: 40,
                                             ),
-                                            FadeAnimation(1.4,
+                                            WidgetFadeAnimation(1.4,
                                                 Container(
                                                   height: 50,
                                                   margin: EdgeInsets.symmetric(
-                                                      horizontal: 50
+                                                      horizontal: 55
                                                   ),
                                                   decoration: BoxDecoration(
-                                                      borderRadius: BorderRadius.circular(50),
+                                                      borderRadius: BorderRadius.circular(55),
                                                       color: Color.fromRGBO(116, 164, 199, 1)
                                                   ),
 
@@ -199,13 +229,14 @@ class _TeacherTaskState extends State<TeacherTask> {
                                                           "Send",
                                                           style: TextStyle(
                                                               color: Colors.white,
-                                                              fontWeight: FontWeight.bold,
+                                                              fontWeight: FontWeight.w600,
                                                               fontSize: 18
                                                           ),
                                                         ),
                                                         // Validate and submit task using GetHelper
                                                         onPressed: () {
-                                                          GetHelper.submitTask(_formKey, context, widget.tuitionID, widget.classID, subjectControl.text, taskControl.text);
+                                                          GetHelper.submitTask(_taskFormKey, context, widget.tuitionID, widget.classID, subjectTeacherControl.text, taskTeacherControl.text);
+
                                                         }
                                                     ),
                                                   ),

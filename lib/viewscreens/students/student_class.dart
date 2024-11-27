@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tuitiongiggle/animation/FadeAnimation.dart';
+import 'package:tuitiongiggle/animation/AnimationWidget.dart';
 import 'package:tuitiongiggle/gethelper/getHelper.dart';
 import 'package:tuitiongiggle/viewscreens/students/student_task.dart';
 import '../../widget-components/student/class_widget.dart';
@@ -19,13 +19,23 @@ class StudentClass extends StatefulWidget {
 // Handles the class data fetching and UI updates
 class _StudentClassState extends State<StudentClass> {
   // Class variable to hold other class data.
-  var classes;
+  late Future<List> classes;
+
+  // Fetch class data
+  Future<List> _fetchClassData() async {
+    try {
+      var response = await GetHelper.fetchData(widget.studentID, 'get_student_class', 'studentID');
+      return response;
+    } catch (e) {
+      throw Exception('There is an error fetching class data: $e');
+    }
+  }
 
   @override
   void initState() {
-    // Use the getHelper to get the class data
-    classes = GetHelper.getData(widget.studentID, 'get_student_class', 'studentID');
     super.initState();
+    // Get the future class data
+    classes = _fetchClassData();
   }
 
   // Navigate students to the 'Show Task' page
@@ -66,7 +76,8 @@ class _StudentClassState extends State<StudentClass> {
         ),
         // Code adapted from Yassein, 2020
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(20),
@@ -75,8 +86,8 @@ class _StudentClassState extends State<StudentClass> {
                 children: <Widget>[
                   SizedBox(
                     height: 40),
-                  FadeAnimation(
-                    1.3,
+                  WidgetFadeAnimation(
+                    1.2,
                     Row(
                         children: [
                     IconButton(
@@ -92,10 +103,10 @@ class _StudentClassState extends State<StudentClass> {
                     SizedBox(width: 90),
                       Text(
                         "Class",
-                        style: GoogleFonts.antic(
+                        style: GoogleFonts.lato(
                           textStyle: TextStyle(
                             color: Colors.white,
-                            fontWeight: FontWeight.bold
+                            fontWeight: FontWeight.w600
                           ),
                           fontSize: 40,
                         ),
@@ -115,9 +126,10 @@ class _StudentClassState extends State<StudentClass> {
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(90),
                     topRight: Radius.circular(90))
               ),
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.all(18),
 
                 // Use list view to show data
+                // Code adapted from SilasPaes, 2019
                 child: FutureBuilder(future: classes,
                   builder: (context, snapshots) {
                     // Loads the data
@@ -125,13 +137,13 @@ class _StudentClassState extends State<StudentClass> {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
+                      // End of adapted code
                     }
                     // Handles the null values there is no class data or is empty
                     if (!snapshots.hasData || snapshots.data == null || (snapshots.data as List).isEmpty) {
                       return Center(
                           child: Text('You have no classes right now',
-                              style: GoogleFonts.antic(
-                                  fontWeight: FontWeight.bold,
+                              style: GoogleFonts.lato(
                                   fontSize: 30
                               )
                           )
@@ -148,9 +160,9 @@ class _StudentClassState extends State<StudentClass> {
                         return ClassWidget(
                           classroom: classList[index]['classroom'] ?? 'No Classroom',
                           subject: classList[index]['subject'] ?? 'No Subject',
-                          time: classList[index]['time_of_room'] ?? 'No Time',
+                          classTime: classList[index]['time_of_room'] ?? 'No Time',
                           // Pass the classID to the task page
-                          function: () =>
+                          voidFunction: () =>
                               _navigateTaskPage(classList[index]['classID']),
                         );
                       },

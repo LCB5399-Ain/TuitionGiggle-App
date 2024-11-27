@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tuitiongiggle/animation/FadeAnimation.dart';
+import 'package:tuitiongiggle/animation/AnimationWidget.dart';
 
 class FeedbackWidget extends StatelessWidget {
-  final String subject;
+  final String titleSubject;
   final String feedback;
-  final String teacherName;
-  final String dateOfFeedback;
+  final String teacherFullName;
+  final String feedbackDate;
 
-  FeedbackWidget({this.subject="", this.feedback="", this.teacherName="", this.dateOfFeedback=""});
+  FeedbackWidget({this.titleSubject="", this.feedback="", this.teacherFullName="", this.feedbackDate=""});
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +18,14 @@ class FeedbackWidget extends StatelessWidget {
           padding: EdgeInsets.all(10),
           margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
           decoration: BoxDecoration(
-            color: Colors.white, // Box background color
+            color: Colors.white,
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.grey.withOpacity(0.4),
                 spreadRadius: 3,
-                blurRadius: 5,
-                offset: Offset(0, 3),
+                blurRadius: 4,
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -44,11 +44,12 @@ class FeedbackWidget extends StatelessWidget {
               ),
             ),
 
-            title: Text(subject,
-              style: GoogleFonts.antic(
+            title: Text(titleSubject,
+              style: GoogleFonts.lato(
                 textStyle: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
+                  color: Colors.black87,
                 ),
               ),
             ),
@@ -56,7 +57,7 @@ class FeedbackWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Teacher: $teacherName',
+                  'Teacher: $teacherFullName',
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey[700],
@@ -64,7 +65,7 @@ class FeedbackWidget extends StatelessWidget {
                 ),
                 SizedBox(height: 4),
                 Text(
-                  dateOfFeedback,
+                  feedbackDate,
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey[700],
@@ -77,31 +78,35 @@ class FeedbackWidget extends StatelessWidget {
             onTap:() {
               showDialog(
                   context: context,
-                  builder: (BuildContext context) {
-                    return FadeAnimation(1.5, AlertDialog(
-                        title: Center(child: Text(subject)),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  builder: (_) {
+                    return WidgetFadeAnimation(1.3,
+                      AlertDialog(
+                        title: Text(titleSubject, textAlign: TextAlign.center),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
                         content: Container(
-                          height: MediaQuery.of(context).size.height * 0.3,
+                          height: MediaQuery.of(context).size.height * 0.35,
                           child: SingleChildScrollView(
-                            child: Column(children: <Widget>[
-                              Divider(thickness: 1.5,),
-                              SizedBox(height: 10,),
+                            child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Divider(thickness: 1.3),
+                              const SizedBox(height: 8.0),
                               // End of adapted code
 
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Icon(Icons.feedback, color: Color.fromRGBO(116, 164, 199, 1)), // Feedback icon
-                                  SizedBox(width: 5),
+                                  const SizedBox(width: 5),
                                   Flexible(
                                     child:
                                     Text(
                                       'Feedback: $feedback',
-                                       style: GoogleFonts.antic(
+                                       style: GoogleFonts.lato(
                                         textStyle: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w600,
                                             fontSize: 20
                                         ),
                                       ),
@@ -110,20 +115,20 @@ class FeedbackWidget extends StatelessWidget {
                                 ],
                               ),
 
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
 
                               Center(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Icon(Icons.person, color: Color.fromRGBO(116, 164, 199, 1)),
-                                    SizedBox(width: 6),
+                                    const SizedBox(width: 6),
                                     Text(
-                                      'Teacher: $teacherName',
-                                      style: GoogleFonts.antic(
+                                      'Teacher: $teacherFullName',
+                                      style: GoogleFonts.lato(
                                         textStyle: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w600,
                                             fontSize: 20
                                         ),
                                       ),
@@ -131,21 +136,21 @@ class FeedbackWidget extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              Divider(thickness: 1.5,),
-                              SizedBox(height: 10,),
+                              const Divider(thickness: 1.5,),
+                              const SizedBox(height: 10,),
 
                               Center(
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Icon(Icons.access_time, color: Color.fromRGBO(116, 164, 199, 1)),
-                                    SizedBox(width: 6),
+                                    const SizedBox(width: 6),
                                     Text(
-                                      dateOfFeedback,
-                                      style: GoogleFonts.antic(
+                                      feedbackDate,
+                                      style: GoogleFonts.lato(
                                         textStyle: TextStyle(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black87,
+                                            fontWeight: FontWeight.w600,
                                             fontSize: 20
                                         ),
                                       ),
@@ -153,8 +158,8 @@ class FeedbackWidget extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                              Divider(thickness: 1.5,),
-                              SizedBox(height: 10,),
+                              const Divider(thickness: 1.3,),
+                              const SizedBox(height: 10,),
 
                             ],
                             ),

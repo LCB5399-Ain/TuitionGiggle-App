@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:tuitiongiggle/viewscreens/teachers/teacher_class.dart';
 import 'package:tuitiongiggle/viewscreens/teachers/teacher_details.dart';
-import '../../animation/FadeAnimation.dart';
+import '../../animation/AnimationWidget.dart';
 import '../../provider/teacher.dart';
 import '../../widget-components/cardItem.dart';
 import '../login.dart';
@@ -21,7 +21,7 @@ class MainTeacherPage extends StatefulWidget {
 
 class _MainTeacherPageState extends State<MainTeacherPage> {
 
-  late TeacherInfo getTeacherInfo;
+  late TeacherData getTeacherData;
 
   late String teacherID;
   late String teacherFullName;
@@ -34,15 +34,21 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
   @override
   Widget build(BuildContext context) {
     // Retrieve the teacher data using Provider
-    getTeacherInfo = Provider.of<Teacher>(context).getTeacherInfo();
+    getTeacherData = Provider.of<Teacher>(context).getTeacherData();
 
-    teacherID = getTeacherInfo.teacherID;
-    teacherFullName = getTeacherInfo.fullName;
-    teacherSubject = getTeacherInfo.subject;
-    teacherPhoneNumber = getTeacherInfo.phoneNumber;
-    teacherEmail = getTeacherInfo.email;
-    teacherAddress = getTeacherInfo.address;
-    tuitionID = getTeacherInfo.tuitionID;
+    if (getTeacherData == null) {
+      return const Center(
+          child: CircularProgressIndicator()
+      );
+    }
+
+    teacherID = getTeacherData.teacherID;
+    teacherFullName = getTeacherData.fullName;
+    teacherSubject = getTeacherData.subject;
+    teacherPhoneNumber = getTeacherData.phoneNumber;
+    teacherEmail = getTeacherData.email;
+    teacherAddress = getTeacherData.address;
+    tuitionID = getTeacherData.tuitionID;
 
     // Code adapted from Yassein, 2020
     return WillPopScope(
@@ -54,54 +60,51 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
               color: Color.fromRGBO(116, 164, 199, 1)
           ),
 
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
+            child: Center (
+              child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 50),
+                Padding(
                 padding: EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 50,
-                    ),
-                    // Place teacher information header in the center
-                    Center(
-                      child: FadeAnimation(
-                        1.3,
-                        Text(
-                          "Teacher: $teacherFullName",
-                          style: GoogleFonts.antic(
-                            textStyle: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                            fontSize: 25,
+                    children: [
+                      WidgetFadeAnimation(
+                        1.2,
+                        Center(
+                          child: Text(
+                            "$teacherFullName",
+                            style: GoogleFonts.lato(
+                              textStyle: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              fontSize: 25,
+                            ),
                           ),
-                        )
-                      )
-                    ),
+                        ),
+                      ),
+                    const SizedBox(height: 10),
 
-                    Center(
-                        child: FadeAnimation(
-                            1.3,
-                            Text(
+                    WidgetFadeAnimation(
+                      1.2,
+                      Center(
+                        child: Text(
                               "Subject: $teacherSubject",
-                              style: GoogleFonts.antic(
+                              style: GoogleFonts.lato(
                                 textStyle: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
                                 fontSize: 25,
                               ),
-                            )
-                        )
+                        ),
+                      ),
                     ),
-
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
               // Display all the card items
               Expanded(
                 child: Container(
@@ -109,43 +112,43 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(60),
-                      topRight: Radius.circular(60)
+                      topLeft: Radius.circular(70),
+                      topRight: Radius.circular(70)
                     )
                   ),
                   padding: EdgeInsets.all(20),
                   child: GridView.count(
                     primary: false,
-                    padding: const EdgeInsets.all(20.0),
-                    crossAxisSpacing: 10, // grid spacing
+                    padding: const EdgeInsets.all(18),
                     crossAxisCount: 2,
+                    crossAxisSpacing: 10,
                     children: <Widget>[
 
-                      CardItem(
-                        desc: 'Teacher Bio',
-                        img: 'assets/teacher_icon.png',
-                        color: Color.fromRGBO(116, 164, 199, 1),
-                        function: () {
+                      MainBox(
+                        textDesc: 'Teacher Bio',
+                        image: 'assets/teacher_icon.png',
+                        backgroundColor: Color.fromRGBO(116, 164, 199, 1),
+                        onTap: () {
                           Navigator.push(
                             context,
                             // Navigate user to the TeacherBio page
                             MaterialPageRoute(
                               builder: (context) => TeacherBio(
-                                fullName: getTeacherInfo.fullName,
-                                subject: getTeacherInfo.subject,
-                                email: getTeacherInfo.email,
-                                address: getTeacherInfo.address,
+                                fullName: getTeacherData.fullName,
+                                subject: getTeacherData.subject,
+                                email: getTeacherData.email,
+                                address: getTeacherData.address,
                               ),
                             ),
                           );
                         },
                       ),
 
-                      CardItem(
-                        desc: 'Announcement',
-                        img: 'assets/announcement.jpeg',
-                        color: Color.fromRGBO(247, 206, 61, 1),
-                        function: () {
+                      MainBox(
+                        textDesc: 'Announcement',
+                        image: 'assets/announcement.jpeg',
+                        backgroundColor: Color.fromRGBO(247, 206, 61, 1),
+                        onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -157,11 +160,11 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
                         },
                       ),
 
-                      CardItem(
-                        desc: 'Class',
-                        img: 'assets/class_icon.png',
-                          color: Color.fromRGBO(247, 206, 61, 1),
-                        function: () { Navigator.push(
+                      MainBox(
+                          textDesc: 'Class',
+                          image: 'assets/class_icon.png',
+                          backgroundColor: Color.fromRGBO(247, 206, 61, 1),
+                          onTap: () { Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => TeacherClass(
                               teacherID: teacherID,
@@ -171,15 +174,15 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
                         }
                       ),
                       // Logout and direct users to login page
-                      CardItem(
-                          desc: 'Logout',
-                          img: 'assets/logout.png',
-                          color: Color.fromRGBO(116, 164, 199, 1),
-                          function: () {
+                      MainBox(
+                          textDesc: 'Logout',
+                          image: 'assets/logout.png',
+                          backgroundColor: Color.fromRGBO(116, 164, 199, 1),
+                          onTap: () {
                             Provider.of<Teacher>(context, listen: false).logOut();
                             Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Login()),
+                            MaterialPageRoute(builder: (context) => LoginScreen()),
                           );
                           }
                       ),
@@ -192,6 +195,7 @@ class _MainTeacherPageState extends State<MainTeacherPage> {
           ),
         ),
       ),
+      )
     );
     // End of adapted code
   }

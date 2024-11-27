@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../animation/FadeAnimation.dart';
+import '../../animation/AnimationWidget.dart';
 
 class TaskWidget extends StatelessWidget {
-  final String subject;
+  final String subjectOfTask;
   final String task;
-  final String dateOfTask;
+  final String taskDate;
 
-  TaskWidget({this.subject="", this.task="", this.dateOfTask=""});
+  TaskWidget({this.subjectOfTask="", this.task="", this.taskDate=""});
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +23,8 @@ class TaskWidget extends StatelessWidget {
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 3,
-                blurRadius: 5,
-                offset: Offset(0, 3),
+                blurRadius: 4,
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -43,11 +43,12 @@ class TaskWidget extends StatelessWidget {
               ),
             ),
 
-            title: Text(subject,
-              style: GoogleFonts.antic(
+            title: Text(subjectOfTask,
+              style: GoogleFonts.lato(
                 textStyle: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
+                  color: Colors.black87,
                 ),
               ),
             ),
@@ -56,44 +57,48 @@ class TaskWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                dateOfTask,
+                taskDate,
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.grey[700],
                 ),
               ),
-              SizedBox(height: 4),
+                const SizedBox(height: 4),
             ],
           ),
             // Code adapted from Yassein, 2020
           onTap:() {
             showDialog(
                 context: context,
-                builder: (BuildContext context) {
-                  return FadeAnimation(1.5, AlertDialog(
-                      title: Center(child: Text(subject)),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                builder: (_) {
+                  return WidgetFadeAnimation(1.3,
+                    AlertDialog(
+                      title: Text(subjectOfTask, textAlign: TextAlign.center),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
                       content: Container(
-                        height: MediaQuery.of(context).size.height * 0.2,
+                        height: MediaQuery.of(context).size.height * 0.35,
                         child: SingleChildScrollView(
-                          child: Column(children: <Widget>[
-                              Divider(thickness: 1.5,),
-                              SizedBox(height: 10,),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Divider(thickness: 1.3),
+                              const SizedBox(height: 8.0),
                               // End of adapted code
 
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Icon(Icons.task, color: Color.fromRGBO(116, 164, 199, 1)), // Feedback icon
-                                  SizedBox(width: 5),
+                                  const SizedBox(width: 5),
                                   Flexible(
                                     child:
                                     Text(
                                       'Task: $task',
-                                      style: GoogleFonts.antic(
+                                      style: GoogleFonts.lato(
                                       textStyle: TextStyle(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black87,
+                                          fontWeight: FontWeight.w600,
                                           fontSize: 20
                                           ),
                                       ),
@@ -102,7 +107,7 @@ class TaskWidget extends StatelessWidget {
                                 ],
                               ),
 
-                              SizedBox(height: 20),
+                              const SizedBox(height: 20),
 
                               Center(
                                 child: Row(
@@ -111,11 +116,11 @@ class TaskWidget extends StatelessWidget {
                                     Icon(Icons.access_time, color: Color.fromRGBO(116, 164, 199, 1)),
                                     SizedBox(width: 6),
                                     Text(
-                                      dateOfTask,
-                                      style: GoogleFonts.antic(
+                                      taskDate,
+                                      style: GoogleFonts.lato(
                                       textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w600,
                                       fontSize: 20
                                       ),
                                       ),
@@ -123,8 +128,8 @@ class TaskWidget extends StatelessWidget {
                                   ],
                                 ),
                               ),
-                            Divider(thickness: 1.5,),
-                            SizedBox(height: 10,),
+                              const Divider(thickness: 1.3),
+                              const SizedBox(height: 10),
 
                           ],
                           ),

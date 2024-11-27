@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
 
-class StudentInfo{
+class StudentData{
   final String studentID;
   final String tuitionID;
   final String fullName;
@@ -13,33 +13,33 @@ class StudentInfo{
   final String address;
   final String dateOfRegister;
 
-  StudentInfo({required this.studentID, required this.tuitionID, required this.fullName, required this.year, required this.dateOfBirth, required this.address, required this.dateOfRegister});
+  StudentData({required this.studentID, required this.tuitionID, required this.fullName, required this.year, required this.dateOfBirth, required this.address, required this.dateOfRegister});
 
 }
 // Manage student data and handles login
 class Student with ChangeNotifier {
-  late StudentInfo _info;
+  late StudentData _infoData;
 
   // Use getter to retrieve the student data
-  StudentInfo getStudentInfo() {
-    return _info;
+  StudentData getStudentData() {
+    return _infoData;
   }
-
+  // Code adapted from Yassein, 2020
   // Use setter to update student data
-  void setStudentInfo(StudentInfo info){
-    _info = info;
-    print(_info);
-    // Notify all the listeners about the new change
+  void setStudentInfo(StudentData info){
+    _infoData = info;
+    print(_infoData);
+    // Notify all the listeners about the new change due to ChangeNotifierProvider
     notifyListeners();
   }
 
   // Handle the student login with username and password
   Future<bool> loginStudentAndGetInfo(String username, String password) async{
-    var response;
+    var responseUrl;
 
     try {
       // Send the POST request
-      response = await http.post(
+      responseUrl = await http.post(
           Uri.parse("http://10.0.2.2/TuitionGiggle/appData/login_students.php"),
           body: {
             "username": username.trim(),
@@ -48,18 +48,18 @@ class Student with ChangeNotifier {
       );
 
       // Check if the response status is successful
-      if (response.statusCode == 200) {
-        var rawResponse = response.body;
+      if (responseUrl.statusCode == 200) {
+        var rawResponse = responseUrl.body;
 
         if (rawResponse.contains("Connected successfully")) {
           rawResponse = rawResponse.replaceFirst("Connected successfully", "").trim();
         }
 
         // Decode the cleaned response
-        var datauser = await json.decode(rawResponse);
+        var studentUser = await json.decode(rawResponse);
         // Update the student data if response data is not empty
-        if (datauser.isNotEmpty) {
-          insertInfo(datauser);
+        if (studentUser.isNotEmpty) {
+          AddInfoData(studentUser);
           return true;
         }
       }
@@ -71,25 +71,26 @@ class Student with ChangeNotifier {
   }
 
   // Insert the retrieved data into the student data object
-  insertInfo(dynamic datauser) {
-    StudentInfo studentInfo = StudentInfo(
-      studentID: datauser[0]['studentID'],
-      tuitionID: datauser[0]['tuitionID'],
-      fullName: datauser[0]['fullName'],
-      year: datauser[0]['year'],
-      dateOfBirth: datauser[0]['date_of_birth'],
-      address: datauser[0]['address'],
-      dateOfRegister: datauser[0]['date_of_register']
+  AddInfoData(dynamic studentData) {
+    StudentData studentInfo = StudentData(
+      studentID: studentData[0]['studentID'],
+      tuitionID: studentData[0]['tuitionID'],
+      fullName: studentData[0]['fullName'],
+      year: studentData[0]['year'],
+      dateOfBirth: studentData[0]['date_of_birth'],
+      address: studentData[0]['address'],
+      dateOfRegister: studentData[0]['date_of_register']
     );
 
     setStudentInfo(studentInfo);
   }
+  // End of adapted code
 
   // Log out the students
   logOut(){
-    _info = new StudentInfo(studentID: '', tuitionID: '', fullName: '', year: '', dateOfBirth: '', address: '', dateOfRegister: '');
+    _infoData = new StudentData(studentID: '', tuitionID: '', fullName: '', year: '', dateOfBirth: '', address: '', dateOfRegister: '');
     notifyListeners(); // Notify about the logout
-    print(_info.studentID);
+    print(_infoData.studentID);
   }
 
 }

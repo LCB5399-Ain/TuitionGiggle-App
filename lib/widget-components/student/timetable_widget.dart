@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../animation/FadeAnimation.dart';
+import '../../animation/AnimationWidget.dart';
 
 class TimetableWidget extends StatelessWidget {
   final String classroom;
@@ -24,8 +24,8 @@ class TimetableWidget extends StatelessWidget {
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 3,
-                blurRadius: 5,
-                offset: Offset(0, 3),
+                blurRadius: 4,
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -45,7 +45,7 @@ class TimetableWidget extends StatelessWidget {
             ),
 
             title: Text(subject,
-              style: GoogleFonts.antic(
+              style: GoogleFonts.lato(
                 textStyle: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -60,39 +60,43 @@ class TimetableWidget extends StatelessWidget {
                     day,
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey[700],
+                    color: Colors.black87,
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
               ],
             ),
             // Code adapted from Yassein, 2020
             onTap:() {
               showDialog(
                 context: context,
-                builder: (BuildContext context) {
-                  return FadeAnimation(1.5, AlertDialog(
-                    title: Center(child: Text(subject)),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                builder: (_) {
+                  return WidgetFadeAnimation(1.3,
+                    AlertDialog(
+                    title: Text(subject, textAlign: TextAlign.center),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                     content: Container(
-                      height: MediaQuery.of(context).size.height * 0.2,
+                      height: MediaQuery.of(context).size.height * 0.25,
                       child: SingleChildScrollView(
-                        child: Column(children: <Widget>[
-                          Divider(thickness: 1.5,),
-                          SizedBox(height: 10,),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Divider(thickness: 1.3),
+                            const SizedBox(height: 8.0),
                           // End of adapted code
 
                           Row(
                             children: [
                               Icon(Icons.location_on, color: Color.fromRGBO(116, 164, 199, 1)),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
                                   classroom,
-                                  style: GoogleFonts.antic(
+                                  style: GoogleFonts.lato(
                                     textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w600,
                                       fontSize: 20,
                                     ),
                                   ),
@@ -100,19 +104,19 @@ class TimetableWidget extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 25),
+                          const SizedBox(height: 25),
 
                           Row(
                             children: [
                               Icon(Icons.calendar_today, color: Color.fromRGBO(116, 164, 199, 1)),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
                                   day,
-                                  style: GoogleFonts.antic(
+                                  style: GoogleFonts.lato(
                                     textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w600,
                                       fontSize: 20,
                                     ),
                                   ),
@@ -120,19 +124,19 @@ class TimetableWidget extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 25),
+                            const SizedBox(height: 25),
 
                           Row(
                             children: [
                               Icon(Icons.access_time, color: Color.fromRGBO(116, 164, 199, 1)),
-                              SizedBox(width: 10),
+                              const SizedBox(width: 10),
                               Expanded(
                                 child: Text(
                                   timeOfRoom,
-                                  style: GoogleFonts.antic(
+                                  style: GoogleFonts.lato(
                                     textStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black87,
+                                      fontWeight: FontWeight.w600,
                                       fontSize: 20,
                                     ),
                                   ),
@@ -140,7 +144,7 @@ class TimetableWidget extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(height: 25),
+                            const SizedBox(height: 25),
 
                         ],
                         ),

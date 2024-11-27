@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class FeeWidget extends StatelessWidget {
-  final String amount;
+class ReceiptWidget extends StatelessWidget {
+  final String totalAmount;
   final String dateOfPayment;
 
-  FeeWidget({this.amount="", this.dateOfPayment=""});
+  ReceiptWidget({this.totalAmount="", this.dateOfPayment=""});
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +19,10 @@ class FeeWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.5),
+                color: Colors.grey.withOpacity(0.4),
                 spreadRadius: 3,
-                blurRadius: 5,
-                offset: Offset(0, 3),
+                blurRadius: 4,
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -36,11 +36,12 @@ class FeeWidget extends StatelessWidget {
                   ),
                 ),
 
-              title: Text(amount,
-                style: GoogleFonts.antic(
+              title: Text(totalAmount,
+                style: GoogleFonts.lato(
                   textStyle: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 20,
+                    color: Colors.black87,
                   ),
                 ),
               ),
@@ -49,12 +50,14 @@ class FeeWidget extends StatelessWidget {
                 children: [
                 Text(
                   dateOfPayment,
-                   style: TextStyle(
+                    style: GoogleFonts.lato(
+                   textStyle: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[700],
                     ),
                   ),
-                SizedBox(height: 4),
+                ),
+                  const SizedBox(height: 4),
                 ],
               ),
           ),

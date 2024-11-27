@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Code adapted from Yassein, 2020
     return MultiProvider(
       // Provides the instances of the Student and Teacher providers
       providers: [
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
           create: (_) => Teacher(),
         ),
       ],
+      // End of adapted code
       child: MaterialApp(
         title: 'Tuition Giggle',
         debugShowCheckedModeBanner: false,
@@ -40,7 +42,7 @@ class MyApp extends StatelessWidget {
           hintColor: Colors.transparent,
         ),
 
-        home: Login(),
+        home: LoginScreen(),
         routes: {
           // Direct users to the pages
           MainStudentPage.routeName: (context) => MainStudentPage(),

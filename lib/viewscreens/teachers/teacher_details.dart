@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../animation/FadeAnimation.dart';
+import '../../animation/AnimationWidget.dart';
 
 class TeacherBio extends StatefulWidget {
   final String fullName;
@@ -50,7 +50,7 @@ class _TeacherBioState extends State<TeacherBio> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(height: 40),
-                  FadeAnimation(
+                  WidgetFadeAnimation(
                     1.3,
                     Row(
                       children: [

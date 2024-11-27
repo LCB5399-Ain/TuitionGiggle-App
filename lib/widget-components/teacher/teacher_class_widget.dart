@@ -5,10 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 class TeacherClassWidget extends StatelessWidget {
   final String classroom;
   final String subject;
-  final String time;
-  final VoidCallback function;
+  final String classTime;
+  final VoidCallback voidFunction;
 
-  TeacherClassWidget({this.classroom="", this.subject="", this.time="", required this.function});
+  TeacherClassWidget({this.classroom="", this.subject="", this.classTime="", required this.voidFunction});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +24,8 @@ class TeacherClassWidget extends StatelessWidget {
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 3,
-                blurRadius: 5,
-                offset: Offset(0, 3),
+                blurRadius: 4,
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -40,16 +40,17 @@ class TeacherClassWidget extends StatelessWidget {
           ),
 
             title: Text(classroom,
-              style: GoogleFonts.antic(
+              style: GoogleFonts.lato(
                 textStyle: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
+                  color: Colors.black87,
                 ),
               ),
             ),
             subtitle:
                 Text(
-                  time,
+                  classTime,
                   maxLines: 1,
                   style: TextStyle(
                     fontSize: 12,
@@ -59,17 +60,18 @@ class TeacherClassWidget extends StatelessWidget {
             // Trailing section
             trailing: TextButton(
               child: Text('Add Task',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                    color: Colors.white),
               ),
               style: TextButton.styleFrom(
                 backgroundColor: Color.fromRGBO(116, 164, 199, 1),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)
+                    borderRadius: BorderRadius.circular(12)
                 ),
               ),
-              onPressed: function,
+              onPressed: voidFunction,
             ),
-            onTap: function,
+            onTap: voidFunction,
           ),
         ),
       ],

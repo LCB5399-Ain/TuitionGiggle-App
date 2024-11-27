@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 
 
-class TeacherInfo{
+class TeacherData{
   final String teacherID;
   final String tuitionID;
   final String fullName;
@@ -14,33 +14,33 @@ class TeacherInfo{
   final String address;
   final String dateOfRegister;
 
-  TeacherInfo({required this.teacherID, required this.tuitionID, required this.fullName, required this.subject, required this.phoneNumber, required this.email, required this.address, required this.dateOfRegister});
+  TeacherData({required this.teacherID, required this.tuitionID, required this.fullName, required this.subject, required this.phoneNumber, required this.email, required this.address, required this.dateOfRegister});
 
 }
 // Manage teacher data and handles login
 class Teacher with ChangeNotifier {
-  late TeacherInfo _info;
+  late TeacherData _infoData;
 
   // Use getter to retrieve the teacher data
-  TeacherInfo getTeacherInfo() {
-    return _info;
+  TeacherData getTeacherData() {
+    return _infoData;
   }
-
+// Code adapted from Yassein, 2020
   // Use setter to update the teacher data
-  void setTeacherInfo(TeacherInfo info){
-    _info = info;
-    print(_info);
+  void setTeacherInfo(TeacherData info){
+    _infoData = info;
+    print(_infoData);
     // Notify all the listeners about the new change
     notifyListeners();
   }
 
   // Handle the teacher login with username and password
   Future<bool> teacherLoginAndGetInfo(String username, String password) async{
-    var response;
+    var responseUrl;
 
     try{
       // Send the POST request
-      response = await http.post(
+      responseUrl = await http.post(
           Uri.parse("http://10.0.2.2/TuitionGiggle/appData/login_teachers.php"),
           body: {
             "username": username.trim(),
@@ -49,18 +49,18 @@ class Teacher with ChangeNotifier {
       );
 
       // Check if the response status is successful
-      if (response.statusCode == 200) {
-        var rawResponse = response.body;
+      if (responseUrl.statusCode == 200) {
+        var rawResponse = responseUrl.body;
 
         if (rawResponse.contains("Connected successfully")) {
           rawResponse = rawResponse.replaceFirst("Connected successfully", "").trim();
         }
 
         // Decode the cleaned response
-        var datauser = await json.decode(rawResponse);
+        var teacherUser = await json.decode(rawResponse);
         // Update the teacher data if response data is not empty
-        if (datauser.isNotEmpty) {
-          insertInfo(datauser);
+        if (teacherUser.isNotEmpty) {
+          AddInfoData(teacherUser);
           return true;
         }
       }
@@ -72,26 +72,27 @@ class Teacher with ChangeNotifier {
   }
 
   // Insert the retrieved data into the student data object
-  insertInfo(dynamic datauser) {
-    TeacherInfo teacherInfo = TeacherInfo(
-        teacherID: datauser[0]['teacherID'],
-        tuitionID: datauser[0]['tuitionID'],
-        fullName: datauser[0]['fullName'],
-        subject: datauser[0]['subject'],
-        phoneNumber: datauser[0]['phoneNumber'],
-        email: datauser[0]['email'],
-        address: datauser[0]['address'],
-        dateOfRegister: datauser[0]['date_of_register']
+  AddInfoData(dynamic teacherData) {
+    TeacherData teacherInfo = TeacherData(
+        teacherID: teacherData[0]['teacherID'],
+        tuitionID: teacherData[0]['tuitionID'],
+        fullName: teacherData[0]['fullName'],
+        subject: teacherData[0]['subject'],
+        phoneNumber: teacherData[0]['phoneNumber'],
+        email: teacherData[0]['email'],
+        address: teacherData[0]['address'],
+        dateOfRegister: teacherData[0]['date_of_register']
     );
 
     setTeacherInfo(teacherInfo);
   }
+  // End of adapted code
 
   // Log out the teachers
   logOut(){
-    _info = new TeacherInfo(teacherID: '', tuitionID: '', fullName: '', subject: '', phoneNumber: '', email: '', address: '', dateOfRegister: '');
+    _infoData = new TeacherData(teacherID: '', tuitionID: '', fullName: '', subject: '', phoneNumber: '', email: '', address: '', dateOfRegister: '');
     notifyListeners(); // Notify about the logout
-    print(_info.teacherID);
+    print(_infoData.teacherID);
   }
 
 }

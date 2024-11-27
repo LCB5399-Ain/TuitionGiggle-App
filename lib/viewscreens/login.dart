@@ -1,51 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:tuitiongiggle/animation/FadeAnimation.dart';
+import 'package:tuitiongiggle/animation/AnimationWidget.dart';
 import 'package:tuitiongiggle/viewscreens/students/main_student_page.dart';
 import 'package:tuitiongiggle/viewscreens/teachers/main_teacher_page.dart';
 import '../provider/student.dart';
 import '../provider/teacher.dart';
 
 
-class Login extends StatefulWidget{
+class LoginScreen extends StatefulWidget{
+
   @override
-  _LoginState createState() => _LoginState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
 // State class for login
 // Code adapted from Arora, 2024
-class _LoginState extends State<Login> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController username = new TextEditingController();
-  TextEditingController password = new TextEditingController();
+class _LoginScreenState extends State<LoginScreen> {
+  final GlobalKey<FormState> _loginFormKey = GlobalKey<FormState>();
+  TextEditingController usernameController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
   // End of adapted code
 
   // Button for choosing student role
-  int selectedRadio = 1;
+  int roleSelectRadio = 1;
 
   // Updates the selected radio button state
-  setSelectedRadio(int val) {
+  void selectRoleRadio(int value) {
     setState(() {
-      selectedRadio = val;
+      roleSelectRadio = value;
     });
   }
-
+  // Code adapted from Yassein, 2020
   // Alert the users if they enter the wrong credentials
-  showAlert(String title, String content) {
+  void _displayAlert(String title, String message) {
     showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (ctx) {
           return AlertDialog(
             title: Text(title),
-            content: Text(content),
+            content: Text(message),
             actions: [
               TextButton(
-                child: Text("Ok"),
+                child: Text("Close"),
                 onPressed: () {
                   // Navigate to login page
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => Login())
+                  Navigator.of(ctx).pushReplacement(
+                      MaterialPageRoute(builder: (_) => LoginScreen())
                   );
                 },
               )
@@ -56,13 +57,12 @@ class _LoginState extends State<Login> {
   }
 
   // Show loading progress when logging in
-  showLoadingProgress() {
+  void _showLoadingIndicator() {
     showDialog(
         context: context,
-        builder: (BuildContext context) {
+        builder: (_) {
           return AlertDialog(
-            content: Container(
-                alignment: Alignment.center,
+            content: SizedBox(
                 height: 90,
                 width: 90,
                 child: Center(
@@ -78,33 +78,34 @@ class _LoginState extends State<Login> {
 
 
   // Handles the login process
-  _login() async {
-    if (_formKey.currentState!.validate()) {
-      showLoadingProgress();
+  Future<void> _performLogin() async {
+    if (_loginFormKey.currentState!.validate()) {
+      _showLoadingIndicator();
 
       // Student radio button
-      if (selectedRadio == 1) {
-        Provider.of<Student>(context, listen: false).loginStudentAndGetInfo(
-            username.text, password.text).then((state) {
-          print('Login state: $state');
-          if (state) {
+      if (roleSelectRadio == 1) {
+        await Provider.of<Student>(context, listen: false).loginStudentAndGetInfo(
+            usernameController.text, passwordController.text).then((success) {
+          print('Login state: $success');
+          if (success) {
             // Navigate users to the main student page
             Navigator.of(context).pushReplacementNamed(MainStudentPage.routeName);
           } else {
-            showAlert('Oh no!',
+            _displayAlert('Oh no!',
                 'The username or password you entered is incorrect. Please try again.');
           }
         });
 
         // Teacher radio button
-      } else if (selectedRadio == 2) {
-        Provider.of<Teacher>(context, listen: false).teacherLoginAndGetInfo(
-            username.text, password.text).then((state) {
-          if (state) {
+      } else if (roleSelectRadio == 2) {
+        await Provider.of<Teacher>(context, listen: false).teacherLoginAndGetInfo(
+            usernameController.text,
+            passwordController.text).then((success) {
+          if (success) {
             // Navigate users to the main teacher page
             Navigator.of(context).pushReplacementNamed(MainTeacherPage.routeName);
           } else {
-            showAlert('Oh no!',
+            _displayAlert('Oh no!',
                 'The username or password you entered is incorrect. Please try again.');
           }
         });
@@ -112,7 +113,6 @@ class _LoginState extends State<Login> {
     }
   }
 
-  // Code adapted from Yassein, 2020
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,7 +126,8 @@ class _LoginState extends State<Login> {
               )
           ),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               SizedBox(
                 height: 25,
@@ -138,11 +139,11 @@ class _LoginState extends State<Login> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Center(
-                        child: FadeAnimation(
+                        child: WidgetFadeAnimation(
                             1,
                             Text(
                               "Login",
-                              style: GoogleFonts.antic(
+                              style: GoogleFonts.lato(
                                 textStyle: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold
@@ -175,8 +176,8 @@ class _LoginState extends State<Login> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(60),
-                          topRight: Radius.circular(60)
+                          topLeft: Radius.circular(65),
+                          topRight: Radius.circular(65)
                       )
                   ),
                   child: Padding(
@@ -187,8 +188,8 @@ class _LoginState extends State<Login> {
                             SizedBox(
                               height: 60,
                             ),
-                            FadeAnimation(
-                                1.4,
+                            WidgetFadeAnimation(
+                                1.6,
                                 Container(
                                   decoration: BoxDecoration(
                                       color: Colors.white,
@@ -202,7 +203,7 @@ class _LoginState extends State<Login> {
                                       ]
                                   ),
                                   child: Form(
-                                    key: _formKey,
+                                    key: _loginFormKey,
                                     child: Column(
                                       children: <Widget>[
                                         Container(
@@ -216,7 +217,7 @@ class _LoginState extends State<Login> {
                                               )
                                           ),
                                           child: TextFormField(
-                                            controller: username,
+                                            controller: usernameController,
                                             decoration: InputDecoration(
                                                 hintText: "Username",
                                                 hintStyle: TextStyle(
@@ -224,6 +225,7 @@ class _LoginState extends State<Login> {
                                                 border: InputBorder.none
                                             ),
                                             keyboardType: TextInputType.text,
+                                            obscureText: false,
                                             validator: (value) {
                                               if (value == null || value.isEmpty) {
                                                 return 'Please enter your username';
@@ -248,7 +250,7 @@ class _LoginState extends State<Login> {
                                               )
                                           ),
                                           child: TextFormField(
-                                            controller: password,
+                                            controller: passwordController,
                                             obscureText: true,
                                             decoration: InputDecoration(
                                                 hintText: "Password",
@@ -275,11 +277,11 @@ class _LoginState extends State<Login> {
                                           children: <Widget>[
                                             Radio(
                                               activeColor: Colors.amber[300],
-                                              groupValue: selectedRadio,
+                                              groupValue: roleSelectRadio,
                                               value: 1,
-                                              onChanged: (val) {
-                                                print(val);
-                                                setSelectedRadio(val!);
+                                              onChanged: (value) {
+                                                print(value);
+                                                selectRoleRadio(value!);
                                               },
                                             ),
                                             Text('Student',
@@ -295,11 +297,11 @@ class _LoginState extends State<Login> {
 
                                             Radio(
                                               activeColor: Colors.amber[300],
-                                              groupValue: selectedRadio,
+                                              groupValue: roleSelectRadio,
                                               value: 2,
-                                              onChanged: (val) {
-                                                print(val);
-                                                setSelectedRadio(val!);
+                                              onChanged: (value) {
+                                                print(value);
+                                                selectRoleRadio(value!);
                                               },
                                             ),
                                             Text('Teacher',
@@ -324,7 +326,7 @@ class _LoginState extends State<Login> {
                             SizedBox(
                               height: 40,
                             ),
-                            FadeAnimation(
+                            WidgetFadeAnimation(
                                 1.6,
                                 Container(
                                   height: 50,
@@ -344,7 +346,7 @@ class _LoginState extends State<Login> {
                                           ),
                                         ),
                                         onPressed: () {
-                                          _login();
+                                          _performLogin();
                                         }
                                     ),
                                   ),

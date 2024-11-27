@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:tuitiongiggle/animation/FadeAnimation.dart';
+import 'package:tuitiongiggle/animation/AnimationWidget.dart';
 import 'package:tuitiongiggle/gethelper/getHelper.dart';
 import '../../widget-components/student/emergency_widget.dart';
 
@@ -17,14 +17,28 @@ class StudentEmergency extends StatefulWidget {
 // Handles the contact data fetching and UI updates
 class _StudentEmergencyState extends State<StudentEmergency>{
   // variable to hold other contacts data.
-  var emergencyContact;
+  late Future<List> emergencyContact;
+
+  // Fetch timetable data
+  Future<List> _fetchContactData() async {
+    try {
+      var response = await GetHelper.fetchData(widget.studentID, 'get_student_emergencyContacts', 'studentID');
+      return response;
+    } catch (e) {
+      throw Exception('There is an error fetching contact data: $e');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // Use the getHelper to get the contact data
-    emergencyContact = GetHelper.getData(widget.studentID, 'get_student_emergencyContacts', 'studentID');
+    // Get the future contact data
+    emergencyContact = _fetchContactData();
 
+    // Print the response from php website
+    emergencyContact.then((response) {
+      print("Raw Response: $response");
+    });
   }
 
   @override
@@ -36,17 +50,18 @@ class _StudentEmergencyState extends State<StudentEmergency>{
             color: Color.fromRGBO(116, 164, 199, 1),
         ),
         child: Column(
-          // Code adapted from Yassein, 2020
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            // Code adapted from Yassein, 2020
             Padding(
               padding: EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(height: 40),
-                  FadeAnimation(
-                    1.3,
+                  WidgetFadeAnimation(
+                    1.4,
                     Row(
                       children: [
                         IconButton(
@@ -59,13 +74,13 @@ class _StudentEmergencyState extends State<StudentEmergency>{
                             Navigator.pop(context);
                           },
                         ),
-                        SizedBox(width: 70),
+                         const SizedBox(width: 70),
                         Text(
                           "Contacts",
-                          style: GoogleFonts.antic(
+                          style: GoogleFonts.lato(
                             textStyle: TextStyle(
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                             ),
                             fontSize: 35,
                           ),
@@ -89,6 +104,7 @@ class _StudentEmergencyState extends State<StudentEmergency>{
                     padding: EdgeInsets.all(20),
 
                     // Use list view to show data
+                      // Code adapted from SilasPaes, 2019
                     child: FutureBuilder(future: emergencyContact,
                       builder: (context, snapshots) {
                         // Loads the data
@@ -96,13 +112,13 @@ class _StudentEmergencyState extends State<StudentEmergency>{
                           return Center(
                             child: CircularProgressIndicator(),
                           );
+                          // End of adapted code
                         }
                         // Handles the null values there is no contact data or is empty
                         if (!snapshots.hasData || snapshots.data == null || (snapshots.data as List).isEmpty) {
                           return Center(
                             child: Text('There are no emergency contacts for this student',
                             style: GoogleFonts.antic(
-                              fontWeight: FontWeight.bold,
                               fontSize: 20
                                 )
                               )
@@ -117,7 +133,7 @@ class _StudentEmergencyState extends State<StudentEmergency>{
                         itemCount: emergencyList.length,
                         itemBuilder: (context, index) {
                           // Use widget to display each contact
-                          return EmergencyWidget(
+                          return ContactWidget(
                             relationship: emergencyList[index]['relationship'],
                             fullName: emergencyList[index]['fullName'],
                             phoneNumber: emergencyList[index]['phoneNumber'],

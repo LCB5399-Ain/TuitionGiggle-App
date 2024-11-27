@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../animation/FadeAnimation.dart';
+import '../../animation/AnimationWidget.dart';
 
 class StudentBio extends StatefulWidget {
   final String fullName;
@@ -26,7 +26,7 @@ class _StudentBioState extends State<StudentBio> {
   void initState() {
     super.initState();
 
-    // Set variables with widget properties
+    // Set the variables with widget properties
     fullName = widget.fullName;
     year = widget.year;
     dateOfBirth = widget.dateOfBirth;
@@ -43,7 +43,8 @@ class _StudentBioState extends State<StudentBio> {
             color: Color.fromRGBO(116, 164, 199, 1)
         ),
         child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
         Padding(
         padding: EdgeInsets.all(20),
@@ -51,8 +52,8 @@ class _StudentBioState extends State<StudentBio> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SizedBox(height: 40),
-            FadeAnimation(
-              1.3,
+            WidgetFadeAnimation(
+              1.4,
               Row(
                 children: [
                   IconButton(
@@ -71,7 +72,7 @@ class _StudentBioState extends State<StudentBio> {
                     style: GoogleFonts.antic(
                       textStyle: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w600,
                       ),
                       fontSize: 35,
                     ),

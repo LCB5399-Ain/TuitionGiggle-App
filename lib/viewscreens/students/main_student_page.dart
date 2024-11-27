@@ -15,7 +15,7 @@ import 'package:tuitiongiggle/viewscreens/students/student_fee.dart';
 import 'package:tuitiongiggle/viewscreens/students/student_feedback.dart';
 import 'package:tuitiongiggle/viewscreens/students/student_timetable.dart';
 import 'package:tuitiongiggle/widget-components/cardItem.dart';
-import '../../animation/FadeAnimation.dart';
+import '../../animation/AnimationWidget.dart';
 import '../login.dart';
 
 // This is the home main page for students
@@ -29,7 +29,7 @@ class MainStudentPage extends StatefulWidget {
 
 class _MainStudentPageState extends State<MainStudentPage> {
 
-  late StudentInfo getStudentInfo;
+  late StudentData getStudentData;
   late String studentID;
   late String studentFullName;
   late String studentYear;
@@ -42,10 +42,11 @@ class _MainStudentPageState extends State<MainStudentPage> {
     super.initState();
     // Get the student data from the provider
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var state = Provider.of<Student>(context, listen: false).getStudentInfo();
+
+      var state = Provider.of<Student>(context, listen: false).getStudentData();
       if (state != null) {
         setState(() {
-          getStudentInfo = state;
+          getStudentData = state;
         });
       } else {
         // Print error if it fails
@@ -59,11 +60,17 @@ class _MainStudentPageState extends State<MainStudentPage> {
   Widget build(BuildContext context) {
 
     // Retrieve the student data using Provider
-    getStudentInfo = Provider.of<Student>(context).getStudentInfo();
-    studentID = getStudentInfo.studentID;
-    studentFullName = getStudentInfo.fullName;
-    studentYear = getStudentInfo.year;
-    tuitionID = getStudentInfo.tuitionID;
+    getStudentData = Provider.of<Student>(context).getStudentData();
+    if (getStudentData == null) {
+      return const Center(
+          child: CircularProgressIndicator()
+      );
+    }
+
+    studentID = getStudentData.studentID;
+    studentFullName = getStudentData.fullName;
+    studentYear = getStudentData.year;
+    tuitionID = getStudentData.tuitionID;
 
 
     // Code adapted from Yassein, 2020
@@ -72,64 +79,60 @@ class _MainStudentPageState extends State<MainStudentPage> {
       child: Scaffold(
         body: Container(
           width: double.infinity,
-          decoration: BoxDecoration(
+          decoration:  const BoxDecoration(
               color: Color.fromRGBO(116, 164, 199, 1)
           ),
 
+          child: Center (
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              const SizedBox(height: 50),
               Padding(
                 padding: EdgeInsets.all(20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(
-                      height: 50,
+                  children: [
+                    WidgetFadeAnimation(
+                      1.2, // Animation duration or start delay
+                      Center(
+                        child: Text(
+                          "Name: $studentFullName",
+                          style: GoogleFonts.lato(
+                            textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            fontSize: 25,
+                          ),
+                        ),
+                      ),
                     ),
-                    // Place student information header in the center
-                    Center(
-                        child: FadeAnimation(
-                            1.3,
-                            Text(
-                              "Name: $studentFullName",
-                              style: GoogleFonts.antic(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold
-                                ),
-                                fontSize: 25,
-                              ),
-                            )
-                        )
-                    ),
-
-                    Center(
-                        child: FadeAnimation(
-                            1.3,
-                            Text(
-                              "Year: $studentYear",
-                              style: GoogleFonts.asar(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold
-                                ),
-                                fontSize: 23,
-                              ),
-                            )
-                        )
+                    const SizedBox(height: 10),
+                    WidgetFadeAnimation(
+                      1.2,
+                      Center(
+                        child: Text(
+                          "Year: $studentYear",
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            fontSize: 25,
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-              SizedBox(
-                height: 20,
               ),
               // Display all the card items
               Expanded(
                 child: Container(
                   width: double.infinity,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(70),
@@ -139,35 +142,36 @@ class _MainStudentPageState extends State<MainStudentPage> {
                   padding: EdgeInsets.all(20),
                   child: GridView.count(
                       primary: false,
-                      padding: const EdgeInsets.all(20.0),
-                      crossAxisSpacing: 10,
+                      padding: const EdgeInsets.all(20),
                       crossAxisCount: 2,
+                      crossAxisSpacing: 10,
                       children: <Widget>[
-                        CardItem(
-                          desc: 'Student Bio',
-                          img: 'assets/student_icon.png',
-                          color: Color.fromRGBO(116, 164, 199, 1),
-                          function: () {
+
+                        MainBox(
+                          textDesc: 'Student Bio',
+                          image: 'assets/student_icon.png',
+                          backgroundColor: Color.fromRGBO(116, 164, 199, 1),
+                          onTap: () {
                             // Navigate user to the Student detail page
                             Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => StudentBio(
-                                  fullName: getStudentInfo.fullName,
-                                  year: getStudentInfo.year,
-                                  dateOfBirth: getStudentInfo.dateOfBirth,
-                                  address: getStudentInfo.address,
+                                  fullName: getStudentData.fullName,
+                                  year: getStudentData.year,
+                                  dateOfBirth: getStudentData.dateOfBirth,
+                                  address: getStudentData.address,
                                 ),
                               ),
                             );
                           },
                         ),
 
-                        CardItem(
-                          desc: 'Announcement',
-                          img: 'assets/announcement.jpeg',
-                          color: Color.fromRGBO(247, 206, 61, 1),
-                          function: () {
+                        MainBox(
+                          textDesc: 'Announcement',
+                          image: 'assets/announcement.jpeg',
+                          backgroundColor: const Color.fromRGBO(247, 206, 61, 1),
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -179,11 +183,11 @@ class _MainStudentPageState extends State<MainStudentPage> {
                           },
                         ),
 
-                        CardItem(
-                          desc: 'Class',
-                          img: 'assets/class_icon.png',
-                          color: Color.fromRGBO(247, 206, 61, 1),
-                          function: () {
+                        MainBox(
+                          textDesc: 'Class',
+                          image: 'assets/class_icon.png',
+                          backgroundColor: const Color.fromRGBO(247, 206, 61, 1),
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -195,11 +199,11 @@ class _MainStudentPageState extends State<MainStudentPage> {
                           },
                         ),
 
-                        CardItem(
-                          desc: 'Timetable',
-                          img: 'assets/timetable_icon.png',
-                          color: Color.fromRGBO(116, 164, 199, 1),
-                          function: () {
+                        MainBox(
+                          textDesc: 'Timetable',
+                          image: 'assets/timetable_icon.png',
+                          backgroundColor: const Color.fromRGBO(116, 164, 199, 1),
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -211,11 +215,11 @@ class _MainStudentPageState extends State<MainStudentPage> {
                           },
                         ),
 
-                        CardItem(
-                          desc: 'Contacts',
-                          img: 'assets/emergency_icon.png',
-                          color: Color.fromRGBO(116, 164, 199, 1),
-                          function: () {
+                        MainBox(
+                          textDesc: 'Contacts',
+                          image: 'assets/emergency_icon.png',
+                          backgroundColor: const Color.fromRGBO(116, 164, 199, 1),
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -227,11 +231,11 @@ class _MainStudentPageState extends State<MainStudentPage> {
                           },
                         ),
 
-                        CardItem(
-                          desc: 'Receipt',
-                          img: 'assets/fee_icon.png',
-                          color: Color.fromRGBO(247, 206, 61, 1),
-                          function: () {
+                        MainBox(
+                          textDesc: 'Receipt',
+                          image: 'assets/fee_icon.png',
+                          backgroundColor: const Color.fromRGBO(247, 206, 61, 1),
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -243,11 +247,11 @@ class _MainStudentPageState extends State<MainStudentPage> {
                           },
                         ),
 
-                        CardItem(
-                          desc: 'Feedback',
-                          img: 'assets/feedback_icon.png',
-                          color: Color.fromRGBO(247, 206, 61, 1),
-                          function: () {
+                        MainBox(
+                          textDesc: 'Feedback',
+                          image: 'assets/feedback_icon.png',
+                          backgroundColor: const Color.fromRGBO(247, 206, 61, 1),
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -259,11 +263,11 @@ class _MainStudentPageState extends State<MainStudentPage> {
                           },
                         ),
 
-                        CardItem(
-                          desc: 'Complaints',
-                          img: 'assets/complaints_icon.png',
-                          color: Color.fromRGBO(116, 164, 199, 1),
-                          function: () {
+                        MainBox(
+                          textDesc: 'Complaints',
+                          image: 'assets/complaints_icon.png',
+                          backgroundColor: const Color.fromRGBO(116, 164, 199, 1),
+                          onTap: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -275,21 +279,20 @@ class _MainStudentPageState extends State<MainStudentPage> {
                           },
                         ),
                         // Logout and direct users to login page
-                        CardItem(
-                            desc: 'Logout',
-                            img: 'assets/logout.png',
-                            color: Color.fromRGBO(116, 164, 199, 1),
-                            function: () {
+                        MainBox(
+                            textDesc: 'Logout',
+                            image: 'assets/logout.png',
+                            backgroundColor: const Color.fromRGBO(116, 164, 199, 1),
+                            onTap: () {
                               Provider.of<Student>(context, listen: false).logOut();
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Login()
+                                    builder: (context) => LoginScreen()
                                 ),
                               );
                             }
                         ),
-
                       ]
                   ),
                 ),
@@ -298,6 +301,7 @@ class _MainStudentPageState extends State<MainStudentPage> {
           ),
         ),
       ),
+      )
     );
     // End of adapted code
   }

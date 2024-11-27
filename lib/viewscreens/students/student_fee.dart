@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../animation/FadeAnimation.dart';
+import '../../animation/AnimationWidget.dart';
 import '../../gethelper/getHelper.dart';
 import '../../widget-components/student/fee_widget.dart';
 
@@ -14,18 +14,31 @@ class StudentFee extends StatefulWidget{
   _StudentFeeState createState() => _StudentFeeState();
 }
 
-// Handles the receipt data fetching and UI updates
+// Handles the receipt data fetching
 class _StudentFeeState extends State<StudentFee>{
-  var fee;
+  late Future<List> fee;
   double total = 0; // total amount
+
+  // Fetch fee data
+  Future<List> _fetchFeeData() async {
+    try {
+      var response = await GetHelper.fetchData(widget.studentID, 'get_student_feePayment', 'studentID');
+      return response;
+    } catch (e) {
+      throw Exception('There is an error fetching fee data: $e');
+    }
+  }
 
   @override
   void initState() {
-    // Use the getHelper to get the fee receipt data
-    fee = GetHelper.getData(widget.studentID, 'get_student_feePayment', 'studentID');
-    // Reset total to 0
-    total = 0;
+    // Get the future fee data
+    fee = _fetchFeeData();
     super.initState();
+
+    // Print the response from php website
+    fee.then((response) {
+      print("Raw Response: $response");
+    });
   }
 
   @override
@@ -38,7 +51,8 @@ class _StudentFeeState extends State<StudentFee>{
         ),
         // Code adapted from Yassein, 2020
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Padding(
               padding: EdgeInsets.all(20),
@@ -46,8 +60,8 @@ class _StudentFeeState extends State<StudentFee>{
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   SizedBox(height: 40),
-                  FadeAnimation(
-                    1.3,
+                  WidgetFadeAnimation(
+                    1.4,
                     Row(
                       children: [
                         IconButton(
@@ -63,10 +77,10 @@ class _StudentFeeState extends State<StudentFee>{
                         SizedBox(width: 80),
                         Text(
                           "Receipt",
-                          style: GoogleFonts.antic(
+                          style: GoogleFonts.lato(
                             textStyle: TextStyle(
+                              fontWeight: FontWeight.w600,
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
                             ),
                             fontSize: 35,
                           ),
@@ -85,22 +99,25 @@ class _StudentFeeState extends State<StudentFee>{
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(90),
                           topRight: Radius.circular(90))
                   ),
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(18),
 
                   // Use list view to show data
-                  child: FutureBuilder(future: fee, builder: (context, snapshots) {
+                  // Code adapted from SilasPaes, 2019
+                  child: FutureBuilder(
+                    future: fee,
+                    builder: (context, snapshots) {
                     // Loads the data
                     if (snapshots.connectionState == ConnectionState.waiting) {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
+                      // End of adapted code
                     }
                     // Handles the null values there is no receipt data or is empty
                     if (!snapshots.hasData || snapshots.data == null || (snapshots.data as List).isEmpty) {
                       return Center(
                           child: Text('There is no fee payment that has been added currently',
                               style: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.bold,
                                   fontSize: 30
                               ))
                       );
@@ -123,14 +140,25 @@ class _StudentFeeState extends State<StudentFee>{
                       itemCount: (snapshots.data as List).length,
                       itemBuilder: (context, index) {
                         // Use widget to display each receipt
-                      return FeeWidget(
-                        amount: feeList[index]['amount'],
+                      return ReceiptWidget(
+                        totalAmount: feeList[index]['amount'],
                         dateOfPayment: feeList[index]['date_of_payment'],
                       );
-                    },
+                      },
                     );
-                  },
-                  )
+                    },
+                  ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 25),
+              child: Text(
+                'If the displayed amount is incorrect, please contact the tuition center immediately.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.white,
+                ),
               ),
             ),
                   // Bottom bar to show total
@@ -169,7 +197,7 @@ class _StudentFeeState extends State<StudentFee>{
                             context: context,
                             builder: (context) => AlertDialog(
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)
+                                borderRadius: BorderRadius.circular(18)
                                 ),
                               title: Center(
                                   child:
@@ -181,16 +209,19 @@ class _StudentFeeState extends State<StudentFee>{
                                   )
                               ),
                               content: Container(
-                              height: 100,
-                                child: Center(
-                                  child: Text(
+                              height: 150,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
                                   '\$$total',
                                       style: GoogleFonts.poppins(
-                                        fontWeight: FontWeight.bold,
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 36,
                                         color: Colors.green[700],
                                   )
-                                )
+                                ),
+                                ],
                               ),
                               ),
                               actions: [
@@ -215,7 +246,7 @@ class _StudentFeeState extends State<StudentFee>{
                             Text('Show Total',
                           style: GoogleFonts.antic(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16,
+                            fontSize: 18,
                             color: Color.fromRGBO(116, 164, 199, 1),
                           ),
                             ),

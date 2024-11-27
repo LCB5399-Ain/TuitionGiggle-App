@@ -5,10 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 class ClassWidget extends StatelessWidget {
   final String classroom;
   final String subject;
-  final String time;
-  final VoidCallback function;
+  final String classTime;
+  final VoidCallback voidFunction;
 
-  ClassWidget({this.classroom="", this.subject="", this.time="", required this.function});
+  ClassWidget({this.classroom="", this.subject="", this.classTime="", required this.voidFunction});
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +24,8 @@ class ClassWidget extends StatelessWidget {
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 3,
-                blurRadius: 5,
-                offset: Offset(0, 3),
+                blurRadius: 4,
+                offset: Offset(0, 2),
               ),
             ],
           ),
@@ -40,10 +40,11 @@ class ClassWidget extends StatelessWidget {
             ),
 
             title: Text(classroom,
-              style: GoogleFonts.antic(
+              style: GoogleFonts.lato(
                 textStyle: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
+                  color: Colors.black87,
                 ),
               ),
             ),
@@ -57,17 +58,17 @@ class ClassWidget extends StatelessWidget {
                     color: Colors.grey[700],
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
 
                 Text(
-                  time,
+                  classTime,
                   maxLines: 1,
                   style: TextStyle(
                     fontSize: 12,
                     color: Colors.grey[700],
                   ),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
               ],
             ),
             // Trailing section
@@ -79,12 +80,12 @@ class ClassWidget extends StatelessWidget {
             style: TextButton.styleFrom(
               backgroundColor: Color.fromRGBO(116, 164, 199, 1),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
               ),
             ),
-              onPressed: function,
+              onPressed: voidFunction,
           ),
-              onTap: function,
+              onTap: voidFunction,
         ),
         ),
       ],
