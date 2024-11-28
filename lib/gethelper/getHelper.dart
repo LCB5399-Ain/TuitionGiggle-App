@@ -5,7 +5,6 @@ import 'package:tuitiongiggle/viewscreens/students/main_student_page.dart';
 import '../viewscreens/teachers/main_teacher_page.dart';
 import 'package:http/http.dart' as http;
 
-var apiShortcut = 'http://10.0.2.2/TuitionGiggle';
 
 class GetHelper{
 
@@ -18,7 +17,7 @@ class GetHelper{
     try {
       // Use POST request to send to the server
       final responseUrl = await http.post(
-          Uri.parse("http://10.0.2.2/TuitionGiggle/appData/retrieve_data/$dataType.php"),
+          Uri.parse("http://103.253.145.27/appData/retrieve_data/$dataType.php"),
          body: {
           "$dataKey": studentID,
         },
@@ -64,7 +63,7 @@ class GetHelper{
     try {
       // Prepare the data to send to the server
       final uri = Uri.parse(
-          "http://10.0.2.2/TuitionGiggle/appData/add_data/insert_complaints.php");
+          "http://103.253.145.27/appData/add_data/insert_complaints.php");
       final response = await http.post(
         uri,
         headers: {"Content-Type": "application/json"},
@@ -108,7 +107,7 @@ class GetHelper{
       try {
         // Prepare the data to send to the server
         final uri = Uri.parse(
-            "http://10.0.2.2/TuitionGiggle/appData/add_data/insert_tasks.php");
+            "http://103.253.145.27/appData/add_data/insert_tasks.php");
         final response = await http.post(
           uri,
           headers: {"Content-Type": "application/json"},
